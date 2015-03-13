@@ -1,0 +1,32 @@
+{
+  "name": "energimolnet-ng",
+  "version": "0.1.0",
+  "description": "Angular SDK for Energimolnet API v2",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf ./dist && mkdir ./dist",
+    "start": "npm run clean && npm run build && npm run build:min",
+    "build": "./node_modules/.bin/browserify ./src/main.js > ./dist/energimolnet.js",
+    "build:min": "./node_modules/.bin/browserify ./src/main.js -t uglifyify > ./dist/energimolnet.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/energimolnet/energimolnet-ng.git"
+  },
+  "keywords": [
+    "energimolnet",
+    "api",
+    "angular"
+  ],
+  "author": "Torsten Freyhall",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/energimolnet/energimolnet-ng/issues"
+  },
+  "homepage": "https://github.com/energimolnet/energimolnet-ng",
+  "devDependencies": {
+    "browserify": "^9.0.3",
+    "uglifyify": "^3.0.1"
+  }
+}
