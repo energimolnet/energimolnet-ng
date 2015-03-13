@@ -21,8 +21,7 @@ module.exports = function(ngModule) {
     '$http',
     '$window',
     '$q',
-    '$rootScope',
-    function($http, $window, $q, $rootScope) {
+    function($http, $window, $q) {
       function request(config) {
         return $q(function(resolve, reject) {
           $http(_emAuthorize(config)).then(function(res) {
