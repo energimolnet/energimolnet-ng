@@ -46,7 +46,7 @@ module.exports = function(ngModule) {
               setToken(undefined);
             }
             
-            reject(res.data ? res.data.errors : {});
+            reject(res.data != null ? res.data.errors : {});
           })
         });
       }
