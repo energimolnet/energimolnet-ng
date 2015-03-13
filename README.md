@@ -5,7 +5,7 @@ Angular SDK for Energimolnet API v2
 
 Currently, we recommend installing via bower:
 ```
-bower install energimolnet/energimolnet-ng
+bower install git@github.com:energimolnet/energimolnet-ng.git
 ```
 
 ## Building
