@@ -23,6 +23,7 @@ module.exports = function(ngModule) {
     'emPassword',
     'emReports',
     'emUsers',
+    'emDateUtil',
     function($window, 
       ConsumptionPreview, 
       ConsumptionStats,
@@ -32,7 +33,8 @@ module.exports = function(ngModule) {
       Owners,
       Password,
       Reports,
-      Users) {
+      Users,
+      DateUtil) {
 
         function em(func, condensed) {
           func.then(function(res) {
@@ -55,6 +57,7 @@ module.exports = function(ngModule) {
         em.Password = Password;
         em.Reports = Reports;
         em.Users = Users;
+        em.DateUtil = DateUtil;
 
         $window.em = em;
     }
