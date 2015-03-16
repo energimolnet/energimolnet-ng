@@ -56,8 +56,15 @@ module.exports = function(ngModule) {
     }
 
     function getPeriod(dates, granularity) {
-      if (granularity === 'month') { return getYearPeriod(dates); }
-      if (granularity === 'day') { return getMonthPeriod(dates); }
+      var isRange = anguar.isArray(dates) && dates.length > 1;
+
+      if (granularity === 'month') {
+        return isRange ? getMonthPeriod(dates) : getYearPeriod(dates);
+      }
+
+      if (granularity === 'day') {
+        return isRange ? getDayPeriod(dates) : getMonthPeriod(dates);
+      }
 
       return getDayPeriod(dates);
     }
