@@ -57,8 +57,15 @@ module.exports = function(ngModule) {
     }
 
     function getPeriod(dates, granularity) {
-      if (granularity === 'month') { return getYearPeriod(dates); }
-      if (granularity === 'day') { return getMonthPeriod(dates); }
+      var isRange = anguar.isArray(dates) && dates.length > 1;
+
+      if (granularity === 'month') {
+        return isRange ? getMonthPeriod(dates) : getYearPeriod(dates);
+      }
+
+      if (granularity === 'day') {
+        return isRange ? getDayPeriod(dates) : getMonthPeriod(dates);
+      }
 
       return getDayPeriod(dates);
     }
@@ -153,6 +160,7 @@ module.exports = function(ngModule) {
     'emPassword',
     'emReports',
     'emUsers',
+    'emDateUtil',
     function($window, 
       ConsumptionPreview, 
       ConsumptionStats,
@@ -162,7 +170,8 @@ module.exports = function(ngModule) {
       Owners,
       Password,
       Reports,
-      Users) {
+      Users,
+      DateUtil) {
 
         function em(func, condensed) {
           func.then(function(res) {
@@ -185,6 +194,7 @@ module.exports = function(ngModule) {
         em.Password = Password;
         em.Reports = Reports;
         em.Users = Users;
+        em.DateUtil = DateUtil;
 
         $window.em = em;
     }
