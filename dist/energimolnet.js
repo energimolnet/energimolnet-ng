@@ -160,6 +160,7 @@ module.exports = function(ngModule) {
     'emReports',
     'emUsers',
     'emDateUtil',
+    'energimolnetAPI',
     function($window, 
       ConsumptionPreview, 
       ConsumptionStats,
@@ -170,11 +171,12 @@ module.exports = function(ngModule) {
       Password,
       Reports,
       Users,
-      DateUtil) {
+      DateUtil,
+      energimolnetAPI) {
 
         function em(func, condensed) {
           func.then(function(res) {
-            if (condensed != null && condensed == true) {
+            if (condensed == true) {
               $window.console.log('Response:\n', res);
             } else {
               $window.console.log('Response:\n', JSON.stringify(res, null, 2));
@@ -194,6 +196,7 @@ module.exports = function(ngModule) {
         em.Reports = Reports;
         em.Users = Users;
         em.DateUtil = DateUtil;
+        em.api = energimolnetAPI;
 
         $window.em = em;
     }
