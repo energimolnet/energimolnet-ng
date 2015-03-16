@@ -27,7 +27,7 @@ module.exports = function(ngModule) {
       return (number < 10 ? '0' : '') + number;
     }
 
-    function periodFormat(year, month, day) {
+    function _periodFormat(year, month, day) {
       if (month != null) { month ++; }
 
       return _zeroPaddedString(year) + _zeroPaddedString(month) + _zeroPaddedString(day);
@@ -40,24 +40,24 @@ module.exports = function(ngModule) {
 
     function getYearPeriod(dates) {
       return periodsFormat(dates, function(date) {
-        return periodFormat(date.getFullYear());
+        return _periodFormat(date.getFullYear());
       });
     }
 
     function getMonthPeriod(dates) {
       return periodsFormat(dates, function(date) {
-        return periodFormat(date.getFullYear(), date.getMonth());
+        return _periodFormat(date.getFullYear(), date.getMonth());
       });
     }
 
     function getDayPeriod(dates) {
       return periodsFormat(dates, function(date) {
-        return periodFormat(date.getFullYear(), date.getMonth(), date.getDate());
+        return _periodFormat(date.getFullYear(), date.getMonth(), date.getDate());
       });
     }
 
     function getPeriod(dates, granularity) {
-      var isRange = anguar.isArray(dates) && dates.length > 1;
+      var isRange = angular.isArray(dates) && dates.length > 1;
 
       if (granularity === 'month') {
         return isRange ? getMonthPeriod(dates) : getYearPeriod(dates);
@@ -129,7 +129,6 @@ module.exports = function(ngModule) {
       getYearPeriod: getYearPeriod,
       daysInMonth: daysInMonth,
       parseISO: parseISO,
-      periodFormat: periodFormat
     }
   });
 };
