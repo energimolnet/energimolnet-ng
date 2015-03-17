@@ -14,6 +14,7 @@
 module.exports = function(ngModule) {
   ngModule.run([
     '$window',
+    'emAccounts',
     'emConsumptionPreview',
     'emConsumptionStats',
     'emConsumptions',
@@ -26,7 +27,8 @@ module.exports = function(ngModule) {
     'emUsers',
     'emDateUtil',
     'energimolnetAPI',
-    function($window, 
+    function($window,
+      Accounts,
       ConsumptionPreview, 
       ConsumptionStats,
       Consumptions,
@@ -52,6 +54,7 @@ module.exports = function(ngModule) {
           });
         }
 
+        em.Accounts = Accounts;
         em.ConsumptionPreview = ConsumptionPreview;
         em.ConsumptionStats = ConsumptionStats;
         em.Consumptions = Consumptions;

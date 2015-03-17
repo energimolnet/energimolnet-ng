@@ -12,6 +12,7 @@
   require('./debug-util')(module);
   require('./date-util')(module);
 
+  require('./models/accounts')(module);
   require('./models/consumption-preview')(module);
   require('./models/consumption-stats')(module);
   require('./models/consumptions')(module);
