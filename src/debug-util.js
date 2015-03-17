@@ -22,6 +22,7 @@ module.exports = function(ngModule) {
     'emOwners',
     'emPassword',
     'emReports',
+    'emRobots',
     'emUsers',
     'emDateUtil',
     'energimolnetAPI',
@@ -34,6 +35,7 @@ module.exports = function(ngModule) {
       Owners,
       Password,
       Reports,
+      Robots,
       Users,
       DateUtil,
       energimolnetAPI) {
@@ -58,6 +60,7 @@ module.exports = function(ngModule) {
         em.Owners = Owners;
         em.Password = Password;
         em.Reports = Reports;
+        em.Robots = Robots;
         em.Users = Users;
         em.DateUtil = DateUtil;
         em.api = energimolnetAPI;

@@ -20,5 +20,6 @@
   require('./models/owners')(module);
   require('./models/password')(module);
   require('./models/reports')(module);
+  require('./models/robots')(module);
   require('./models/users')(module);
 })(angular);

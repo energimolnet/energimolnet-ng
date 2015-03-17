@@ -158,6 +158,7 @@ module.exports = function(ngModule) {
     'emOwners',
     'emPassword',
     'emReports',
+    'emRobots',
     'emUsers',
     'emDateUtil',
     'energimolnetAPI',
@@ -170,6 +171,7 @@ module.exports = function(ngModule) {
       Owners,
       Password,
       Reports,
+      Robots,
       Users,
       DateUtil,
       energimolnetAPI) {
@@ -194,6 +196,7 @@ module.exports = function(ngModule) {
         em.Owners = Owners;
         em.Password = Password;
         em.Reports = Reports;
+        em.Robots = Robots;
         em.Users = Users;
         em.DateUtil = DateUtil;
         em.api = energimolnetAPI;
@@ -315,9 +318,10 @@ module.exports = function(ngModule) {
   require('./models/owners')(module);
   require('./models/password')(module);
   require('./models/reports')(module);
+  require('./models/robots')(module);
   require('./models/users')(module);
 })(angular);
-},{"./date-util":1,"./debug-util":2,"./energimolnet-api":3,"./models/consumption-preview":5,"./models/consumption-stats":6,"./models/consumptions":7,"./models/contracts":8,"./models/me":9,"./models/owners":10,"./models/password":11,"./models/reports":12,"./models/users":13,"./resource-factory":14,"./url":15}],5:[function(require,module,exports){
+},{"./date-util":1,"./debug-util":2,"./energimolnet-api":3,"./models/consumption-preview":5,"./models/consumption-stats":6,"./models/consumptions":7,"./models/contracts":8,"./models/me":9,"./models/owners":10,"./models/password":11,"./models/reports":12,"./models/robots":13,"./models/users":14,"./resource-factory":15,"./url":16}],5:[function(require,module,exports){
 module.exports = function(ngModule) {
   ngModule.factory('emConsumptionPreview', [
     'emResourceFactory',
@@ -400,6 +404,15 @@ module.exports = function(ngModule) {
 };
 },{}],13:[function(require,module,exports){
 module.exports = function(ngModule) {
+  ngModule.factory('emRobots', [
+    'emResourceFactory',
+    function(resourceFactory) {
+      return resourceFactory({default: '/robots'}, ['get', 'query', 'save']);
+    }
+  ]);
+};
+},{}],14:[function(require,module,exports){
+module.exports = function(ngModule) {
   ngModule.factory('emUsers', [
     'emResourceFactory',
     function(resourceFactory) {
@@ -407,7 +420,7 @@ module.exports = function(ngModule) {
     }
   ]);
 };
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = function(ngModule) {
   ngModule.factory('emResourceFactory', [
     'emUrl',
@@ -494,7 +507,7 @@ module.exports = function(ngModule) {
     }
   ]);
 };
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /*
  * This factory generates urls for accessing the Energimolnet API
  * based on current configurations.
