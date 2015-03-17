@@ -330,7 +330,7 @@ module.exports = function(ngModule) {
   ngModule.factory('emAccounts', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/accounts'}, ['get', 'query', 'save']);
+      return resourceFactory({default: '/accounts'}, ['get', 'query', 'save', 'delete']);
     }
   ]);
 };
@@ -375,7 +375,7 @@ module.exports = function(ngModule) {
   ngModule.factory('emContracts', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/contracts'}, ['get', 'query', 'save']);
+      return resourceFactory({default: '/contracts'}, ['get', 'query', 'save', 'delete']);
     }
   ]);
 };
@@ -420,11 +420,14 @@ module.exports = function(ngModule) {
   ngModule.factory('emRobots', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/robots'}, ['get', 'query', 'save']);
+      return resourceFactory({default: '/robots'}, ['get', 'query', 'save', 'delete']);
     }
   ]);
 };
 },{}],15:[function(require,module,exports){
+// NOTE: Users will be deprecated and replaced by accounts.
+// To get users, query accounts with {role: 'user'}
+
 module.exports = function(ngModule) {
   ngModule.factory('emUsers', [
     'emResourceFactory',
@@ -444,6 +447,7 @@ module.exports = function(ngModule) {
           this.getPath = paths.get || paths.default;
           this.queryPath = paths.query || paths.default;
           this.savePath = paths.save || paths.default;
+          this.deletePath = paths['delete'] || paths.get || paths.default;
           this.options = options || {};
         };
 
@@ -457,6 +461,10 @@ module.exports = function(ngModule) {
 
         if (methods.indexOf('save') > -1) {
           Resource.prototype.save = _emSaveResource;
+        }
+
+        if (methods.indexOf('delete') > -1) {
+          Resource.prototype.delete = _emDeleteResource;
         }
 
         return new Resource();
@@ -496,6 +504,13 @@ module.exports = function(ngModule) {
           method: 'GET',
           url: Url.url(this.queryPath),
           params: _removeEmpty(params)
+        });
+      }
+
+      function _emDeleteResource(id) {
+        return Api.request({
+          method: 'DELETE',
+          url: Url.url([this.deletePath, id])
         });
       }
 

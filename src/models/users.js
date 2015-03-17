@@ -1,3 +1,6 @@
+// NOTE: Users will be deprecated and replaced by accounts.
+// To get users, query accounts with {role: 'user'}
+
 module.exports = function(ngModule) {
   ngModule.factory('emUsers', [
     'emResourceFactory',

@@ -8,6 +8,7 @@ module.exports = function(ngModule) {
           this.getPath = paths.get || paths.default;
           this.queryPath = paths.query || paths.default;
           this.savePath = paths.save || paths.default;
+          this.deletePath = paths['delete'] || paths.get || paths.default;
           this.options = options || {};
         };
 
@@ -21,6 +22,10 @@ module.exports = function(ngModule) {
 
         if (methods.indexOf('save') > -1) {
           Resource.prototype.save = _emSaveResource;
+        }
+
+        if (methods.indexOf('delete') > -1) {
+          Resource.prototype.delete = _emDeleteResource;
         }
 
         return new Resource();
@@ -60,6 +65,13 @@ module.exports = function(ngModule) {
           method: 'GET',
           url: Url.url(this.queryPath),
           params: _removeEmpty(params)
+        });
+      }
+
+      function _emDeleteResource(id) {
+        return Api.request({
+          method: 'DELETE',
+          url: Url.url([this.deletePath, id])
         });
       }
 
