@@ -6,7 +6,7 @@ module.exports = function(ngModule) {
         forAccount: function(accountId) {
           var path = '/accounts/' + accountId + '/subaccounts';
 
-          return resourceFactory({default: path}, ['get', 'save', 'query']);
+          return resourceFactory({default: path}, ['get', 'save', 'query', 'delete']);
         }
       }
     }
