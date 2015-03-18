@@ -46,8 +46,9 @@ The collections models have one or more of the following methods implemented:
 + `get(modelId)`
 + `get(meterId, granularity, periods)`
 + `save(model)`
++ `forAccount(accountId)`
 
-The returned objects from all these methods are [promises](https://docs.angularjs.org/api/ng/service/$q). The promises either resolve to the requested object (when a *single object* is requested), or to an object of the following structure (when a *list of objects* is requested):
+The returned objects from the first four methods are [promises](https://docs.angularjs.org/api/ng/service/$q). The promises either resolve to the requested object (when a *single object* is requested), or to an object of the following structure (when a *list of objects* is requested):
 
 ```
 {
@@ -62,6 +63,9 @@ The returned objects from all these methods are [promises](https://docs.angularj
   }
 }
 ```
+
+See below for response of `forAccount()` method.
+
 
 #### query(params)
 
@@ -194,7 +198,7 @@ When updating an existing object, you only need to provide the changed keys and 
 ```
 angular.module('myModule').controller('myNameChangeController', [
   'emMe',
-  function(Me, DateUtil) {
+  function(Me) {
     // This fetches the current user and appends ', ftw!' to his/her name
 
     Me.get().then(function(me) {
@@ -202,6 +206,29 @@ angular.module('myModule').controller('myNameChangeController', [
       return Me.save(me);
     }).then(function(savedMe) {
       console.log('Saved me: ', savedMe);
+    });
+  }
+}]);
+```
+
+#### forAccount(accountId)
+
+This method is currently only available on `Subaccounts` collection. Calling `Subaccounts.forAccount(<id>)` returns a collection model that only returns subaccounts for a given account. This model is then used as normal.
+
+```
+angular.module('myModule').controller('mySubaccountsController', [
+  'emSubaccounts',
+  'account'
+  function(Subaccounts, account) {
+    var mySubaccounts = Subaccounts.forAccount(account._id);
+    var vm = this;
+
+    mySubaccounts.save({name: 'managed account'}).then(function(subaccount) {
+      mySubaccounts.query({name: 'managed'}).then(function(res) {
+        vm.subaccounts = res.data;
+      }, function(err) {
+        console.log('Error: ', err);
+      });
     });
   }
 }]);
