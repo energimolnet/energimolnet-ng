@@ -5,9 +5,13 @@ module.exports = function(ngModule) {
       var Subaccounts = resourceFactory({default: '/accounts'}, ['get', 'query', 'save', 'delete']);
 
       Subaccounts.forAccount = function(accountId) {
-        this.queryPath = this.getPath = '/accounts/' + accountId + '/subaccounts';
-
-        return this;
+        var path = '/accounts/' + accountId + '/subaccounts';
+        
+        return resourceFactory({
+          default: '/accounts',
+          get: path,
+          query: path
+        });
       }
     }
   ]);
