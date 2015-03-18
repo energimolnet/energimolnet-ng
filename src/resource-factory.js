@@ -1,3 +1,7 @@
+/*
+ * This factory generates model collections for Energimolnet.
+ * Use the models found in the models folder.
+ */
 module.exports = function(ngModule) {
   ngModule.factory('emResourceFactory', [
     'emUrl',

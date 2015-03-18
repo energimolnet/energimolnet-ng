@@ -22,5 +22,6 @@
   require('./models/password')(module);
   require('./models/reports')(module);
   require('./models/robots')(module);
+  require('./models/subaccounts')(module);
   require('./models/users')(module);
 })(angular);
