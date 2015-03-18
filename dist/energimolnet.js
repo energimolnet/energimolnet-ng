@@ -430,16 +430,12 @@ module.exports = function(ngModule) {
   ngModule.factory('emSubaccounts', [
     'emResourceFactory',
     function(resourceFactory) {
-      var Subaccounts = resourceFactory({default: '/accounts'}, ['get', 'query', 'save', 'delete']);
+      return {
+        forAccount: function(accountId) {
+          var path = '/accounts/' + accountId + '/subaccounts';
 
-      Subaccounts.forAccount = function(accountId) {
-        var path = '/accounts/' + accountId + '/subaccounts';
-        
-        return resourceFactory({
-          default: '/accounts',
-          get: path,
-          query: path
-        });
+          return resourceFactory({default: path}, ['get', 'save', 'query']);
+        }
       }
     }
   ]);
