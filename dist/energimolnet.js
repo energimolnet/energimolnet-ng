@@ -420,13 +420,14 @@ module.exports = function(ngModule) {
 module.exports = function(ngModule) {
   ngModule.factory('emRobots', [
     'emResourceFactory',
+    'emUrl',
     'energimolnetAPI',
-    function(resourceFactory, Api) {
+    function(resourceFactory, Url, Api) {
       var Robots =  resourceFactory({default: '/robots'}, ['get', 'query', 'save', 'delete']);
 
       Robots.run = function(robotId) {
         Api.request({
-          url: this.getPath + '/' + robotId + 'run',
+          url: Url.url([this.getPath, robotId, + 'run']),
           method: 'POST'
         });
       };
