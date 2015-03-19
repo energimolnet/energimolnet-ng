@@ -427,7 +427,7 @@ module.exports = function(ngModule) {
 
       Robots.run = function(robotId) {
         Api.request({
-          url: Url.url([this.getPath, robotId, + 'run']),
+          url: Url.url([this.getPath, robotId, 'run']),
           method: 'POST'
         });
       };
