@@ -426,7 +426,7 @@ module.exports = function(ngModule) {
       var Robots =  resourceFactory({default: '/robots'}, ['get', 'query', 'save', 'delete']);
 
       Robots.run = function(robotId) {
-        Api.request({
+        return Api.request({
           url: Url.url([this.getPath, robotId, 'run']),
           method: 'POST'
         });
