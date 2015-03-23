@@ -13,6 +13,7 @@
   require('./date-util')(module);
 
   require('./models/accounts')(module);
+  require('./models/clients')(module);
   require('./models/consumption-preview')(module);
   require('./models/consumption-stats')(module);
   require('./models/consumptions')(module);
