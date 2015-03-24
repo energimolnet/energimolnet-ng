@@ -151,6 +151,7 @@ module.exports = function(ngModule) {
   ngModule.run([
     '$window',
     'emAccounts',
+    'emClients',
     'emConsumptionPreview',
     'emConsumptionStats',
     'emConsumptions',
@@ -158,13 +159,16 @@ module.exports = function(ngModule) {
     'emMe',
     'emOwners',
     'emPassword',
+    'emRefreshTokens',
     'emReports',
     'emRobots',
+    'emSubaccounts',
     'emUsers',
     'emDateUtil',
     'energimolnetAPI',
     function($window,
       Accounts,
+      Clients,
       ConsumptionPreview, 
       ConsumptionStats,
       Consumptions,
@@ -172,8 +176,10 @@ module.exports = function(ngModule) {
       Me,
       Owners,
       Password,
+      RefreshTokens,
       Reports,
       Robots,
+      Subaccounts,
       Users,
       DateUtil,
       energimolnetAPI) {
@@ -191,6 +197,7 @@ module.exports = function(ngModule) {
         }
 
         em.Accounts = Accounts;
+        em.Clients = Clients;
         em.ConsumptionPreview = ConsumptionPreview;
         em.ConsumptionStats = ConsumptionStats;
         em.Consumptions = Consumptions;
@@ -198,8 +205,10 @@ module.exports = function(ngModule) {
         em.Me = Me;
         em.Owners = Owners;
         em.Password = Password;
+        em.RefreshTokens = RefreshTokens;
         em.Reports = Reports;
         em.Robots = Robots;
+        em.Subaccounts = Subaccounts;
         em.Users = Users;
         em.DateUtil = DateUtil;
         em.api = energimolnetAPI;
@@ -208,6 +217,7 @@ module.exports = function(ngModule) {
     }
   ]);
 };
+
 },{}],3:[function(require,module,exports){
 /*
  * This service performs communication with Energimolnet API.
@@ -343,13 +353,15 @@ module.exports = function(ngModule) {
   ngModule.factory('emClients', [
     'emResourceFactory',
     function(resourceFactory) {
-      return {
-        forAccount: function(accountId) {
-          var path = '/accounts/' + accountId + '/clients';
-
-          return resourceFactory({default: path}, ['query']);
-        }
-      };
+      return resourceFactory(
+        {
+          default: '/clients'
+        },
+        ['get', 'save', 'query', 'delete'],
+        {
+          forAccountPath: 'clients',
+          forAccountMethods: ['get', 'save', 'query', 'delete']
+        });
     }
   ]);
 };
@@ -470,16 +482,14 @@ module.exports = function(ngModule) {
   ngModule.factory('emSubaccounts', [
     'emResourceFactory',
     function(resourceFactory) {
-      return {
-        forAccount: function(accountId) {
-          var path = '/accounts/' + accountId + '/subaccounts';
-
-          return resourceFactory({default: path}, ['get', 'save', 'query', 'delete']);
-        }
-      }
+      return resourceFactory({}, [], {
+        forAccountPath: 'subaccounts',
+        forAccountMethods: ['get', 'save', 'query', 'delete']
+      });
     }
   ]);
 };
+
 },{}],18:[function(require,module,exports){
 // NOTE: Users will be deprecated and replaced by accounts.
 // To get users, query accounts with {role: 'user'}
@@ -503,12 +513,14 @@ module.exports = function(ngModule) {
     'energimolnetAPI',
     function (Url, Api) {
       function resourceFactory(paths, methods, options) {
+        options = options || {};
+
         function Resource() {
           this.getPath = paths.get || paths.default;
           this.queryPath = paths.query || paths.default;
           this.savePath = paths.save || paths.default;
           this.deletePath = paths['delete'] || paths.get || paths.default;
-          this.options = options || {};
+          this.options = options;
         };
 
         if (methods.indexOf('get') > -1) {
@@ -525,6 +537,10 @@ module.exports = function(ngModule) {
 
         if (methods.indexOf('delete') > -1) {
           Resource.prototype.delete = _emDeleteResource;
+        }
+
+        if (options.forAccountPath != null) {
+          Resource.prototype.forAccount = _emForAccount;
         }
 
         return new Resource();
@@ -574,6 +590,14 @@ module.exports = function(ngModule) {
         });
       }
 
+      function _emForAccount(id) {
+        var paths = {
+          default: Url.url(['/accounts', id, this.options.forAccountPath])
+        };
+
+        return resourceFactory(paths, this.options.forAccountMethods);
+      }
+
       function _removeEmpty(object) {
         var params = {};
 
@@ -595,6 +619,7 @@ module.exports = function(ngModule) {
     }
   ]);
 };
+
 },{}],20:[function(require,module,exports){
 /*
  * This factory generates urls for accessing the Energimolnet API

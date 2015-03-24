@@ -15,6 +15,7 @@ module.exports = function(ngModule) {
   ngModule.run([
     '$window',
     'emAccounts',
+    'emClients',
     'emConsumptionPreview',
     'emConsumptionStats',
     'emConsumptions',
@@ -22,13 +23,16 @@ module.exports = function(ngModule) {
     'emMe',
     'emOwners',
     'emPassword',
+    'emRefreshTokens',
     'emReports',
     'emRobots',
+    'emSubaccounts',
     'emUsers',
     'emDateUtil',
     'energimolnetAPI',
     function($window,
       Accounts,
+      Clients,
       ConsumptionPreview, 
       ConsumptionStats,
       Consumptions,
@@ -36,8 +40,10 @@ module.exports = function(ngModule) {
       Me,
       Owners,
       Password,
+      RefreshTokens,
       Reports,
       Robots,
+      Subaccounts,
       Users,
       DateUtil,
       energimolnetAPI) {
@@ -55,6 +61,7 @@ module.exports = function(ngModule) {
         }
 
         em.Accounts = Accounts;
+        em.Clients = Clients;
         em.ConsumptionPreview = ConsumptionPreview;
         em.ConsumptionStats = ConsumptionStats;
         em.Consumptions = Consumptions;
@@ -62,8 +69,10 @@ module.exports = function(ngModule) {
         em.Me = Me;
         em.Owners = Owners;
         em.Password = Password;
+        em.RefreshTokens = RefreshTokens;
         em.Reports = Reports;
         em.Robots = Robots;
+        em.Subaccounts = Subaccounts;
         em.Users = Users;
         em.DateUtil = DateUtil;
         em.api = energimolnetAPI;

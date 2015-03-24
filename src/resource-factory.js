@@ -8,12 +8,14 @@ module.exports = function(ngModule) {
     'energimolnetAPI',
     function (Url, Api) {
       function resourceFactory(paths, methods, options) {
+        options = options || {};
+
         function Resource() {
           this.getPath = paths.get || paths.default;
           this.queryPath = paths.query || paths.default;
           this.savePath = paths.save || paths.default;
           this.deletePath = paths['delete'] || paths.get || paths.default;
-          this.options = options || {};
+          this.options = options;
         };
 
         if (methods.indexOf('get') > -1) {
@@ -30,6 +32,10 @@ module.exports = function(ngModule) {
 
         if (methods.indexOf('delete') > -1) {
           Resource.prototype.delete = _emDeleteResource;
+        }
+
+        if (options.forAccountPath != null) {
+          Resource.prototype.forAccount = _emForAccount;
         }
 
         return new Resource();
@@ -77,6 +83,14 @@ module.exports = function(ngModule) {
           method: 'DELETE',
           url: Url.url([this.deletePath, id])
         });
+      }
+
+      function _emForAccount(id) {
+        var paths = {
+          default: Url.url(['/accounts', id, this.options.forAccountPath])
+        };
+
+        return resourceFactory(paths, this.options.forAccountMethods);
       }
 
       function _removeEmpty(object) {
