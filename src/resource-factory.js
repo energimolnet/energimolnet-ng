@@ -30,6 +30,10 @@ module.exports = function(ngModule) {
           Resource.prototype.save = _emSaveResource;
         }
 
+        if (methods.indexOf('batchUpdate') > -1) {
+          Resource.prototype.batchUpdate = _emBatchUpdateResources;
+        }
+
         if (methods.indexOf('delete') > -1) {
           Resource.prototype.delete = _emDeleteResource;
         }
@@ -68,6 +72,22 @@ module.exports = function(ngModule) {
           url: Url.url(urlComponents),
           data: data
         })
+      }
+
+      function _emBatchUpdateResources(ids, properties) {
+        var payload = [];
+
+        for (var i = 0, len = ids.length; i < len; i++) {
+          var update = angular.copy(properties);
+          update._id = ids[i];
+          payload.pus(update);
+        }
+
+        return Api.request({
+          method: 'PUT',
+          url: Url.url([this.batchUpdatePath]),
+          data: payload
+        });
       }
 
       function _emQueryResource(params) {
