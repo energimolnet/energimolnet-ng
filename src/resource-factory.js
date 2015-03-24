@@ -87,7 +87,7 @@ module.exports = function(ngModule) {
 
       function _emForAccount(id) {
         var paths = {
-          default: Url.url(['/accounts', id, this.options.forAccountPath])
+          default: '/accounts/' + id + '/' + this.options.forAccountPath
         };
 
         return resourceFactory(paths, this.options.forAccountMethods);
