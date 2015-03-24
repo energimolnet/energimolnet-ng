@@ -80,7 +80,7 @@ module.exports = function(ngModule) {
         for (var i = 0, len = ids.length; i < len; i++) {
           var update = angular.copy(properties);
           update._id = ids[i];
-          payload.pus(update);
+          payload.push(update);
         }
 
         return Api.request({
