@@ -521,6 +521,7 @@ module.exports = function(ngModule) {
           this.queryPath = paths.query || paths.default;
           this.savePath = paths.save || paths.default;
           this.deletePath = paths['delete'] || paths.get || paths.default;
+          this.batchUpdatePath = paths.batchUpdate || paths.default;
           this.options = options;
         };
 
