@@ -4,6 +4,7 @@ describe('Energimolnet API tests', function() {
   beforeEach(module('energimolnet'));
 
   beforeEach(inject(function(_$httpBackend_, energimolnetAPI) {
+    angular.module('energimolnet').constant('apiBaseUrl', 'http://dummy.local/');
     $httpBackend = _$httpBackend_;
     api = energimolnetAPI;
   }));

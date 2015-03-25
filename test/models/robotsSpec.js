@@ -4,7 +4,7 @@ describe('Robots', function() {
   beforeEach(module('energimolnet'));
 
   beforeEach(inject(function(_$httpBackend_, emRobots, emUrl) {
-    angular.module('energimolnet').constant('apiBaseUrl', 'http://dummy.local');
+    angular.module('energimolnet').constant('apiBaseUrl', 'http://dummy.local/');
 
     Robots = emRobots;
     $httpBackend = _$httpBackend_;

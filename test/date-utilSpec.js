@@ -3,7 +3,7 @@ describe('DateUtil', function() {
   beforeEach(module('energimolnet'));
 
   beforeEach(function() {
-    angular.module('energimolnet').constant('apiBaseUrl', 'http://dummy.local');
+    angular.module('energimolnet').constant('apiBaseUrl', 'http://dummy.local/');
   });
 
   beforeEach(inject(function(emDateUtil) {
@@ -49,5 +49,5 @@ describe('DateUtil', function() {
 
       expect(DateUtil.parseISO(isoDateString).getTime()).toEqual(1408831200000);
     });
-  })
+  });
 });
