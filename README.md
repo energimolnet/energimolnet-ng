@@ -166,7 +166,7 @@ A period can either be a start and end date, or a single date. In the latter cas
 ```
 angular.module('myModule').controller('myConsumptionsController', [
   'emConsumptions',
-  'emDateUtil'
+  'emDateUtil',
   function(Consumptions, DateUtil) {
     var vm = this;
     var meterId = '1234567890abcdef12345';
@@ -213,12 +213,12 @@ angular.module('myModule').controller('myNameChangeController', [
 
 #### forAccount(accountId)
 
-This method is currently only available on `Subaccounts` collection. Calling `Subaccounts.forAccount(<id>)` returns a collection model that only returns subaccounts for a given account. This model is then used as normal.
+This method is currently only available on `Subaccounts` and `Clients` collections. Calling `Subaccounts.forAccount(<id>)` returns a collection model that only returns subaccounts/clients for a given account. This model is then used as normal.
 
 ```
 angular.module('myModule').controller('mySubaccountsController', [
   'emSubaccounts',
-  'account'
+  'account',
   function(Subaccounts, account) {
     var mySubaccounts = Subaccounts.forAccount(account._id);
     var vm = this;
