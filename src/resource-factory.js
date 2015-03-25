@@ -14,10 +14,10 @@ module.exports = function(ngModule) {
           this.getPath = paths.get || paths.default;
           this.queryPath = paths.query || paths.default;
           this.savePath = paths.save || paths.default;
-          this.deletePath = paths['delete'] || paths.get || paths.default;
+          this.deletePath = paths['delete'] || paths.default;
           this.batchUpdatePath = paths.batchUpdate || paths.default;
           this.options = options;
-        };
+        }
 
         if (methods.indexOf('get') > -1) {
           Resource.prototype.get = _emGetResource;
@@ -39,7 +39,7 @@ module.exports = function(ngModule) {
           Resource.prototype.delete = _emDeleteResource;
         }
 
-        if (options.forAccountPath != null) {
+        if (options.forAccountPath !== undefined) {
           Resource.prototype.forAccount = _emForAccount;
         }
 
@@ -58,7 +58,7 @@ module.exports = function(ngModule) {
         var data = object;
         var urlComponents;
 
-        if (object._id != null || this.options.saveMethod == 'PUT') {
+        if (object._id !== undefined || this.options.saveMethod === 'PUT') {
           urlComponents = [this.savePath, object._id];
           method = 'PUT';
           data = angular.copy(object);
@@ -72,7 +72,7 @@ module.exports = function(ngModule) {
           method: method,
           url: Url.url(urlComponents),
           data: data
-        })
+        });
       }
 
       function _emBatchUpdateResources(ids, properties) {
