@@ -24,7 +24,7 @@ describe('Meters', function() {
     it('should allow assigning of a single meter', function() {
       var meterId = '12345';
       var accountId = '67890';
-      var url = Url.url('/meters/many/assign');
+      var url = Url.url('/meters/many/assign_to');
 
       $httpBackend.expectPOST(url, '[{"_id":"12345","holder":"67890"}]').respond(200, {});
 
@@ -36,7 +36,7 @@ describe('Meters', function() {
     it('should allow assigning of multiple meters', function() {
       var meterIds = ['12345', 'abcde', 'fghij'];
       var accountId = '67890';
-      var url = Url.url('/meters/many/assign');
+      var url = Url.url('/meters/many/assign_to');
 
       $httpBackend.expectPOST(url, '[{"_id":"12345","holder":"67890"},{"_id":"abcde","holder":"67890"},{"_id":"fghij","holder":"67890"}]').respond(200, {});
 
@@ -50,7 +50,7 @@ describe('Meters', function() {
     it('should allow sharing of a single meter', function() {
       var meterId = '12345';
       var accountId = '67890';
-      var url = Url.url('/meters/many/share');
+      var url = Url.url('/meters/many/share_with');
 
       $httpBackend.expectPOST(url, '[{"_id":"12345","holder":"67890"}]').respond(200, {});
 
@@ -62,7 +62,7 @@ describe('Meters', function() {
     it('should allow assigning of multiple meters', function() {
       var meterIds = ['12345', 'abcde', 'fghij'];
       var accountId = '67890';
-      var url = Url.url('/meters/many/share');
+      var url = Url.url('/meters/many/share_with');
 
       $httpBackend.expectPOST(url, '[{"_id":"12345","holder":"67890"},{"_id":"abcde","holder":"67890"},{"_id":"fghij","holder":"67890"}]').respond(200, {});
 

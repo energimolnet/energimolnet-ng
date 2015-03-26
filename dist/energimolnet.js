@@ -416,8 +416,8 @@ module.exports = function(ngModule) {
     function(resourceFactory, Api, Url) {
       var Meters = resourceFactory({default: '/meters'}, ['get', 'query', 'save', 'delete', 'batchUpdate']);
 
-      Meters.assign = _emShareAssign('/meters/many/assign');
-      Meters.share = _emShareAssign('/meters/many/share');
+      Meters.assign = _emShareAssign('/meters/many/assign_to');
+      Meters.share = _emShareAssign('/meters/many/share_with');
 
       return Meters;
 
