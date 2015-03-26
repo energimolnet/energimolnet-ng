@@ -408,6 +408,10 @@ module.exports = function(ngModule) {
   ]);
 };
 },{}],11:[function(require,module,exports){
+var PATH_ASSIGN = '/meters/many/assign_to';
+var PATH_SHARE = '/meters/many/share_with';
+var PATH_REVOKE = '/meters/many/revoke';
+
 module.exports = function(ngModule) {
   ngModule.factory('emMeters', [
     'emResourceFactory',
@@ -416,8 +420,9 @@ module.exports = function(ngModule) {
     function(resourceFactory, Api, Url) {
       var Meters = resourceFactory({default: '/meters'}, ['get', 'query', 'save', 'delete', 'batchUpdate']);
 
-      Meters.assign = _emShareAssign('/meters/many/assign_to');
-      Meters.share = _emShareAssign('/meters/many/share_with');
+      Meters.assign = _emShareAssign(PATH_ASSIGN);
+      Meters.share = _emShareAssign(PATH_SHARE);
+      Meters.revoke = _emRevoke;
 
       return Meters;
 
@@ -447,6 +452,15 @@ module.exports = function(ngModule) {
             data: data
           });
         };
+      }
+
+
+      function _emRevoke(meterIds) {
+        return Api.request({
+          url: Url.url(PATH_REVOKE),
+          method: 'PUT',
+          data: meterIds
+        });
       }
     }
   ]);

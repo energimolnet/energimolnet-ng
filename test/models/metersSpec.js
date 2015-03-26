@@ -71,5 +71,29 @@ describe('Meters', function() {
       $httpBackend.flush();
     });
   });
+
+  describe('revoke', function() {
+    it('should be able to revoke a single contract', function() {
+      var meterId = 'abc123';
+      var url = Url.url('/meters/many/revoke');
+
+      $httpBackend.expectPUT(url, '["abc123"]').respond(200, {});
+
+     Meters.revoke([meterId]); 
+
+     $httpBackend.flush();
+    });
+
+    it('should be able to revoke multiple contracts', function() {
+      var meterIds = ['abc123', '123abc'];
+      var url = Url.url('/meters/many/revoke');
+
+      $httpBackend.expectPUT(url, '["abc123","123abc"]').respond(200, {});
+
+     Meters.revoke(meterIds);
+
+     $httpBackend.flush();
+    });
+  });
 });
 
