@@ -19,6 +19,7 @@ module.exports = function(ngModule) {
     'emConsumptionPreview',
     'emConsumptionStats',
     'emConsumptions',
+    'emContracts',
     'emMe',
     'emMeters',
     'emOwners',
@@ -35,6 +36,7 @@ module.exports = function(ngModule) {
       ConsumptionPreview, 
       ConsumptionStats,
       Consumptions,
+      Contracts,
       Me,
       Meters,
       Owners,
@@ -63,6 +65,7 @@ module.exports = function(ngModule) {
         em.ConsumptionPreview = ConsumptionPreview;
         em.ConsumptionStats = ConsumptionStats;
         em.Consumptions = Consumptions;
+        em.Contracts = Contracts;
         em.Meters = Meters;
         em.Me = Me;
         em.Owners = Owners;

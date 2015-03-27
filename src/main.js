@@ -17,6 +17,7 @@
   require('./models/consumption-preview')(module);
   require('./models/consumption-stats')(module);
   require('./models/consumptions')(module);
+  require('./models/contracts')(module);
   require('./models/me')(module);
   require('./models/meters')(module);
   require('./models/owners')(module);
