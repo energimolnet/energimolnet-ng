@@ -111,7 +111,9 @@ module.exports = function(ngModule) {
           default: '/accounts/' + id + '/' + this.options.forAccountPath
         };
 
-        return resourceFactory(paths, this.options.forAccountMethods);
+        return resourceFactory(paths,
+                               this.options.forAccountMethods,
+                               this.options.forAccountOptions);
       }
 
       function _removeEmpty(object) {

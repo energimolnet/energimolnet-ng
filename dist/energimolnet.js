@@ -395,17 +395,29 @@ module.exports = function(ngModule) {
   ngModule.factory('emConsumptions', [
     'emResourceFactory',
     function(resourceFactory) {
-      var Consumptions = resourceFactory({default: '/consumptions'}, ['get']); // Needs more thinking on how this should work
+      var Consumptions = resourceFactory(
+        {default: '/consumptions'},
+        ['get'],
+        {
+          forAccountPath: 'consumptions',
+          forAccountMethods: 'save',
+          forAccountOptions: {
+            saveMethod: 'PUT'
+          }
+        }
+      );
 
       Consumptions.origGet = Consumptions.get;
+
       Consumptions.get = function get(id, granularity, ranges) {
         return Consumptions.origGet(id + '/' + granularity + '/' + ranges.join('+'));
-      }
+      };
 
       return Consumptions;
     }
   ]);
 };
+
 },{}],10:[function(require,module,exports){
 // Legacy support for /contracts
 module.exports = function(ngModule) {
@@ -686,7 +698,9 @@ module.exports = function(ngModule) {
           default: '/accounts/' + id + '/' + this.options.forAccountPath
         };
 
-        return resourceFactory(paths, this.options.forAccountMethods);
+        return resourceFactory(paths,
+                               this.options.forAccountMethods,
+                               this.options.forAccountOptions);
       }
 
       function _removeEmpty(object) {
