@@ -1,8 +1,8 @@
 /*
  * This attaches an em object to window that can be used for testing
  * and debugging.
- * 
- * The em function is used to log the data or error returned from the 
+ *
+ * The em function is used to log the data or error returned from the
  * promise that the collection models return.
  *
  * E.g.
@@ -20,6 +20,7 @@ module.exports = function(ngModule) {
     'emConsumptionStats',
     'emConsumptions',
     'emContracts',
+    'emFtpConnections',
     'emMe',
     'emMeters',
     'emOwners',
@@ -34,10 +35,11 @@ module.exports = function(ngModule) {
     function($window,
       Accounts,
       Clients,
-      ConsumptionPreview, 
+      ConsumptionPreview,
       ConsumptionStats,
       Consumptions,
       Contracts,
+      FtpConnections,
       Me,
       Meters,
       Owners,
@@ -68,6 +70,7 @@ module.exports = function(ngModule) {
         em.ConsumptionStats = ConsumptionStats;
         em.Consumptions = Consumptions;
         em.Contracts = Contracts;
+        em.FtpConnections = FtpConnections;
         em.Meters = Meters;
         em.Me = Me;
         em.Owners = Owners;

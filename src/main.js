@@ -1,7 +1,7 @@
 /*
  * This file glues all the separate components together.
  * Angular needs to be globally available.
- */ 
+ */
 
 (function(angular) {
   var module = angular.module('energimolnet', []);
@@ -18,6 +18,7 @@
   require('./models/consumption-stats')(module);
   require('./models/consumptions')(module);
   require('./models/contracts')(module);
+  require('./models/ftp-connections')(module);
   require('./models/me')(module);
   require('./models/meters')(module);
   require('./models/owners')(module);
