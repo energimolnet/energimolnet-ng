@@ -227,7 +227,7 @@ module.exports = function(ngModule) {
 },{}],3:[function(require,module,exports){
 /*
  * This service performs communication with Energimolnet API.
- * It formats requests to required format and parses the 
+ * It formats requests to required format and parses the
  * responses in a suitable way.
  *
  * Unless needed, use the api models to communicate with the API
@@ -237,7 +237,7 @@ module.exports = function(ngModule) {
  * Do:
  *
  *   Owners.query({name: 'Halmstad'})
- * 
+ *
  * Dont':
  *
  *   energimolnetAPI.request({url: 'http://app.../owners', params:...})
@@ -262,7 +262,7 @@ module.exports = function(ngModule) {
                   limit: res.data.limit,
                   count: res.data.count,
                   page: 1 + (res.data.skip / res.data.limit),
-                  from: res.data.skip + 1,
+                  from: (res.data.count === 0) ? 0 : res.data.skip + 1,
                   to: (res.data.skip + res.data.limit > res.data.count) ? res.data.count : res.data.skip + res.data.limit
                 }
               })
@@ -271,7 +271,7 @@ module.exports = function(ngModule) {
             if (res.status === 401) { // User is not logged in
               setToken(undefined);
             }
-            
+
             reject(res.data != null ? res.data.errors : {});
           })
         });
@@ -283,7 +283,7 @@ module.exports = function(ngModule) {
       var KEY_API_TOKEN = 'energimolnetApiToken';
 
       function getToken() {
-        return $window.localStorage.getItem(KEY_API_TOKEN);;
+        return $window.localStorage.getItem(KEY_API_TOKEN);
       }
 
       function setToken(token) {
@@ -299,7 +299,7 @@ module.exports = function(ngModule) {
         var token = getToken();
 
         if (token != null) {
-          config.headers = {Authorization: 'OAuth ' + token}
+          config.headers = {Authorization: 'OAuth ' + token};
         }
 
         return config;
