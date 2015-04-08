@@ -27,6 +27,7 @@ module.exports = function(ngModule) {
     'emPassword',
     'emRefreshTokens',
     'emReports',
+    'emRobotJobs',
     'emRobots',
     'emUsers',
     'emSubaccounts',
@@ -46,6 +47,7 @@ module.exports = function(ngModule) {
       Password,
       RefreshTokens,
       Reports,
+      RobotJobs,
       Robots,
       Users,
       Subaccounts,
@@ -77,6 +79,7 @@ module.exports = function(ngModule) {
         em.Password = Password;
         em.RefreshTokens = RefreshTokens;
         em.Reports = Reports;
+        em.RobotJobs = RobotJobs;
         em.Robots = Robots;
         em.Subaccounts = Subaccounts;
         em.Users = Users;

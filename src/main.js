@@ -25,6 +25,7 @@
   require('./models/password')(module);
   require('./models/refreshtokens')(module);
   require('./models/reports')(module);
+  require('./models/robot-jobs')(module);
   require('./models/robots')(module);
   require('./models/subaccounts')(module);
   require('./models/users')(module);
