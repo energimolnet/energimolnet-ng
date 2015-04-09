@@ -75,12 +75,12 @@ module.exports = function(ngModule) {
 
       var components = [parseInt(period.substr(0, 4), 10)];
       var i = 0, len = period.length;
-      
+
       while (4 + (i * 2) < len) {
         components[i + 1] = parseInt(period.substr(4 + (2 * i), 2));
         i++;
       }
-      
+
       return new Date(components[0],                          // hour
                       components[1] ? components[1] - 1 : 0,  // month
                       components[2] || 1,                     // day
