@@ -18,6 +18,8 @@
   require('./models/consumption-stats')(module);
   require('./models/consumptions')(module);
   require('./models/contracts')(module);
+  require('./models/ediel-jobs')(module);
+  require('./models/file-jobs')(module);
   require('./models/ftp-connections')(module);
   require('./models/me')(module);
   require('./models/meters')(module);

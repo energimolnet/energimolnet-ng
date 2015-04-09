@@ -20,6 +20,8 @@ module.exports = function(ngModule) {
     'emConsumptionStats',
     'emConsumptions',
     'emContracts',
+    'emEdielJobs',
+    'emFileJobs',
     'emFtpConnections',
     'emMe',
     'emMeters',
@@ -40,6 +42,8 @@ module.exports = function(ngModule) {
       ConsumptionStats,
       Consumptions,
       Contracts,
+      EdielJobs,
+      FileJobs,
       FtpConnections,
       Me,
       Meters,
@@ -72,6 +76,8 @@ module.exports = function(ngModule) {
         em.ConsumptionStats = ConsumptionStats;
         em.Consumptions = Consumptions;
         em.Contracts = Contracts;
+        em.EdielJobs = EdielJobs;
+        em.FileJobs = FileJobs;
         em.FtpConnections = FtpConnections;
         em.Meters = Meters;
         em.Me = Me;
