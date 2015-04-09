@@ -5,7 +5,7 @@ Angular SDK for Energimolnet API v2
 
 Currently, we recommend installing via bower:
 ```
-bower install git@github.com:energimolnet/energimolnet-ng.git
+bower install energimolnet/energimolnet-ng
 ```
 
 ## Building
@@ -21,11 +21,13 @@ The dist-files are available in the repo, so there should be no need to build in
 
 ## Usage example
 
-Documentation regarding authentication, the available endpoints, and response data format can be found [at Apiary](http://docs.energimolnetv2.apiary.io/)
+Documentation regarding authentication, the available endpoints, and response data format can be found [at Apiary](http://docs.energimolnetv2.apiary.io/). Note that the 2.0 API is currently in BETA and will change prior to public release.
 
 ### Authenticating user
 
-Prior to requesting data from the API, you need to authenticate a user using [OAuth](http://en.wikipedia.org/wiki/OAuth). While developing, it might be convenient to use your private developer key. This key can be injected using the `setToken` method on `energimolnetAPI`.
+Prior to requesting data from the API, you need to authenticate a user using [OAuth](http://en.wikipedia.org/wiki/OAuth). You are responsible for authenticating the user, refreshing the tokens and appending the token to all requests. There are several libraries for Angular/Cordova that manages oAuth, and you're free to choose the one that suits your project the best.
+
+While developing, it might be convenient to use your private developer key. This key can be injected using the `setToken` method on `energimolnetAPI`.
 
 ```
 angular.module('myApp').run([
@@ -38,7 +40,7 @@ angular.module('myApp').run([
 
 ### Collection model structure
 
-Typically, you talk to the API using our collection models. For a list of what models are available in the SDK, check the `src/models` folder. The aim is that any public enpoint should have a matching collection model in the SDK.
+Typically, you talk to the API using our collection models. For a list of what models are available in the SDK, check the `src/models` folder. The aim is that any public endpoint should have a matching collection model in the SDK.
 
 The collections models have one or more of the following methods implemented:
 
@@ -69,7 +71,7 @@ See below for response of `forAccount()` method.
 
 #### query(params)
 
-The query method is used to list all (or a subset of all) items of a type. A common example is to list all the contracts a user can acess. 
+The query method is used to list all (or a subset of all) items of a type. A common example is to list all the contracts a user can acess.
 
 If `params` is undefined, the query will return all items of the collection type that the authenticated user has access to.
 
@@ -117,7 +119,7 @@ Collection.query({skip: 50})
 
 #### get(modelId)
 
-This method fetches the object that has the provided `modelId`. 
+This method fetches the object that has the provided `modelId`.
 
 Some collection types, such as `Me` and `ConsumptionStats`, do not require `modelId` since there is only one possible item to return. Providing a `modelId` when fetching from these collections will make the request fail.
 
@@ -139,7 +141,7 @@ angular.module('myModule').controller('myOwnersController', [
   'emOwners',
   function(Owners) {
     var vm = this;
-    var ownerId = "5268c832dedcde9d1d0000df"; 
+    var ownerId = "5268c832dedcde9d1d0000df";
 
     Owners.get(ownerId).then(function(owner) {
       vm.owner = owner;
@@ -152,11 +154,11 @@ angular.module('myModule').controller('myOwnersController', [
 
 #### Consumptions.get(meterId, granularity, periods)
 
-This method only exists on the Consumptions collection and replaces the `get(modelId)` method. 
+This method only exists on the Consumptions collection and replaces the `get(modelId)` method.
 
 The `granularity` argument accepts a string, currenly 'hour', 'day', or 'month'. The granuliarity is the desired time unit for the consumptions. Note that some meters only have month values. Check the `consumption_stats` object on the contract to see what data is available to the user.
 
-The `periods` argument should be an array of request periods. Periods are strings in the format "YYYYMMDDHHMM". The required date units depend on the granularity. The easiest way to create a period is by using `getPeriod(dates, granularity)` from the `DateUtil` module. 
+The `periods` argument should be an array of request periods. Periods are strings in the format "YYYYMMDDHHMM". The required date units depend on the granularity. The easiest way to create a period is by using `getPeriod(dates, granularity)` from the `DateUtil` module.
 
 A period can either be a start and end date, or a single date. In the latter case, the period will be auto-calculated. Some examples of this are
 
