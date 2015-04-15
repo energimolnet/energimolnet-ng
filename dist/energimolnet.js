@@ -640,7 +640,7 @@ module.exports = function(ngModule) {
     'emResourceFactory',
     function(resourceFactory) {
       return resourceFactory({}, [], {
-        forAccountPath: 'subaccounts',
+        forAccountPath: 'tokens',
         forAccountMethods: ['get', 'save', 'query', 'delete']
       });
     }
