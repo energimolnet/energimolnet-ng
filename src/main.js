@@ -30,5 +30,6 @@
   require('./models/robot-jobs')(module);
   require('./models/robots')(module);
   require('./models/subaccounts')(module);
+  require('./models/tokens')(module);
   require('./models/users')(module);
 })(angular);
