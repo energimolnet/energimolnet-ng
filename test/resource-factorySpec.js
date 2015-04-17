@@ -30,10 +30,28 @@ describe('Resource Factory', function() {
   it('should return collections that return new ones using the forAccount method', function() {
     var collection = resourceFactory({}, [], {
       forAccountPath: 'testcollection',
-      forAccountMethods: ['get', 'query'] 
+      forAccountMethods: ['get', 'query']
     });
 
     var url = Url.url(['accounts', '12345', 'testcollection', '67890']);
+    $httpBackend.expectGET(url).respond(200, {});
+
+    var forAccountCollection = collection.forAccount("12345");
+    forAccountCollection.get("67890");
+
+    $httpBackend.flush();
+  });
+
+  it('should respect custom paths for collections created using forAccount method', function() {
+    var collection = resourceFactory({}, [], {
+      forAccountPath: 'testcollection',
+      forAccountMethods: ['get', 'query'],
+      forAccountPaths: {
+        get: '/other'
+      }
+    });
+
+    var url = Url.url(['other', '67890']);
     $httpBackend.expectGET(url).respond(200, {});
 
     var forAccountCollection = collection.forAccount("12345");
@@ -65,4 +83,4 @@ describe('Resource Factory', function() {
 
     $httpBackend.flush();
   });
-}); 
+});

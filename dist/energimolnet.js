@@ -628,7 +628,12 @@ module.exports = function(ngModule) {
     function(resourceFactory) {
       return resourceFactory({}, [], {
         forAccountPath: 'subaccounts',
-        forAccountMethods: ['get', 'save', 'query', 'delete']
+        forAccountMethods: ['get', 'save', 'query', 'delete'],
+        forAccountPaths: {
+          get: '/accounts',
+          save: '/accounts',
+          delete: '/accounts'
+        }
       });
     }
   ]);
@@ -770,9 +775,11 @@ module.exports = function(ngModule) {
       }
 
       function _emForAccount(id) {
-        var paths = {
-          default: '/accounts/' + id + '/' + this.options.forAccountPath
-        };
+        var paths = this.options.forAccountPaths || {};
+
+        if (paths.default === undefined) {
+          paths.default = '/accounts/' + id + '/' + this.options.forAccountPath;
+        }
 
         return resourceFactory(paths,
                                this.options.forAccountMethods,

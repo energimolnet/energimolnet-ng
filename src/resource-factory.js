@@ -107,9 +107,11 @@ module.exports = function(ngModule) {
       }
 
       function _emForAccount(id) {
-        var paths = {
-          default: '/accounts/' + id + '/' + this.options.forAccountPath
-        };
+        var paths = this.options.forAccountPaths || {};
+
+        if (paths.default === undefined) {
+          paths.default = '/accounts/' + id + '/' + this.options.forAccountPath;
+        }
 
         return resourceFactory(paths,
                                this.options.forAccountMethods,
