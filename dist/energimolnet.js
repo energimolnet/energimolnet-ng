@@ -675,7 +675,7 @@ module.exports = function(ngModule) {
     'energimolnetAPI',
     function (Url, Api) {
       function resourceFactory(paths, methods, options) {
-        options = options || {};
+        options = options || {};
 
         function Resource() {
           this.getPath = paths.get || paths.default;
@@ -774,7 +774,7 @@ module.exports = function(ngModule) {
       }
 
       function _emForAccount(id) {
-        var paths = this.options.forAccountPaths || {};
+        var paths = angular.copy(this.options.forAccountPaths) || {};
 
         if (paths.default === undefined) {
           paths.default = '/accounts/' + id + '/' + this.options.forAccountPath;
