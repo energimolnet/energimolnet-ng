@@ -7,7 +7,6 @@ module.exports = function(ngModule) {
         forAccountMethods: ['get', 'save', 'query', 'delete'],
         forAccountPaths: {
           get: '/accounts',
-          save: '/accounts',
           delete: '/accounts'
         }
       });
