@@ -17,7 +17,6 @@
   require('./models/consumption-preview')(module);
   require('./models/consumption-stats')(module);
   require('./models/consumptions')(module);
-  require('./models/contracts')(module);
   require('./models/ediel-jobs')(module);
   require('./models/file-jobs')(module);
   require('./models/ftp-connections')(module);
@@ -31,5 +30,4 @@
   require('./models/robots')(module);
   require('./models/subaccounts')(module);
   require('./models/tokens')(module);
-  require('./models/users')(module);
 })(angular);

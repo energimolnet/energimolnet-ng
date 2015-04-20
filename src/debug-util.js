@@ -19,7 +19,6 @@ module.exports = function(ngModule) {
     'emConsumptionPreview',
     'emConsumptionStats',
     'emConsumptions',
-    'emContracts',
     'emEdielJobs',
     'emFileJobs',
     'emFtpConnections',
@@ -31,7 +30,6 @@ module.exports = function(ngModule) {
     'emReports',
     'emRobotJobs',
     'emRobots',
-    'emUsers',
     'emSubaccounts',
     'emTokens',
     'emDateUtil',
@@ -42,7 +40,6 @@ module.exports = function(ngModule) {
       ConsumptionPreview,
       ConsumptionStats,
       Consumptions,
-      Contracts,
       EdielJobs,
       FileJobs,
       FtpConnections,
@@ -54,7 +51,6 @@ module.exports = function(ngModule) {
       Reports,
       RobotJobs,
       Robots,
-      Users,
       Subaccounts,
       Tokens,
       DateUtil,
@@ -77,7 +73,6 @@ module.exports = function(ngModule) {
         em.ConsumptionPreview = ConsumptionPreview;
         em.ConsumptionStats = ConsumptionStats;
         em.Consumptions = Consumptions;
-        em.Contracts = Contracts;
         em.EdielJobs = EdielJobs;
         em.FileJobs = FileJobs;
         em.FtpConnections = FtpConnections;
@@ -91,7 +86,6 @@ module.exports = function(ngModule) {
         em.Robots = Robots;
         em.Subaccounts = Subaccounts;
         em.Tokens = Tokens;
-        em.Users = Users;
         em.DateUtil = DateUtil;
         em.api = energimolnetAPI;
 
