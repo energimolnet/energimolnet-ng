@@ -19,7 +19,7 @@ describe('Consumptions', function() {
   it('should assume electricity metric unless specified', function() {
     var dummyId = 'id12345';
     var url = Url.url(['consumptions', dummyId, 'day', '20150101']);
-    var urlElectricity = url + '?metric=energy';
+    var urlElectricity = url + '?metrics=energy';
 
     $httpBackend.expectGET(urlElectricity).respond(200, {});
 
@@ -28,10 +28,10 @@ describe('Consumptions', function() {
     $httpBackend.flush();
   });
 
-  it('should respect the provided metric', function() {
+  it('should respect the provided metrics', function() {
     var dummyId = 'id12345';
     var url = Url.url(['consumptions', dummyId, 'day', '20150101']);
-    var urlFlow = url + '?metric=flow';
+    var urlFlow = url + '?metrics=flow';
 
     $httpBackend.expectGET(urlFlow).respond(200, {});
 

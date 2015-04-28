@@ -16,14 +16,14 @@ module.exports = function(ngModule) {
         }
       );
 
-      Consumptions.get = function get(id, granularity, ranges, metric) {
-        metric = metric || 'energy';
+      Consumptions.get = function get(id, granularity, ranges, metrics) {
+        metrics = metrics || 'energy';
 
         return Api.request({
           method: 'GET',
           url: Url.url([this.getPath, id, granularity, ranges.join('+')]),
           params: {
-            metric: metric
+            metrics: metrics
           }
         });
       };
