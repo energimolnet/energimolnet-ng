@@ -19,7 +19,7 @@ describe('Consumptions', function() {
   it('should assume electricity metric unless specified', function() {
     var dummyId = 'id12345';
     var url = Url.url(['consumptions', dummyId, 'day', '20150101']);
-    var urlElectricity = url + '?metric=electricity';
+    var urlElectricity = url + '?metric=energy';
 
     $httpBackend.expectGET(urlElectricity).respond(200, {});
 

@@ -426,7 +426,7 @@ module.exports = function(ngModule) {
       );
 
       Consumptions.get = function get(id, granularity, ranges, metric) {
-        metric = metric || 'electricity';
+        metric = metric || 'energy';
 
         return Api.request({
           method: 'GET',
