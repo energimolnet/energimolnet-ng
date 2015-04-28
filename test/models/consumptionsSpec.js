@@ -23,7 +23,7 @@ describe('Consumptions', function() {
 
     $httpBackend.expectGET(urlElectricity).respond(200, {});
 
-    Consumptions.get(dummyId, 'day', ['20150101']);
+    Consumptions.get(dummyId, 'day', '20150101');
 
     $httpBackend.flush();
   });
@@ -35,7 +35,19 @@ describe('Consumptions', function() {
 
     $httpBackend.expectGET(urlFlow).respond(200, {});
 
-    Consumptions.get(dummyId, 'day', ['20150101'], 'flow');
+    Consumptions.get(dummyId, 'day', '20150101', 'flow');
+
+    $httpBackend.flush();
+  });
+
+  it('should allow fetching multiple metrics', function() {
+    var dummyId = 'id12345';
+    var url = Url.url(['consumptions', dummyId, 'day', '20150101']);
+    var urlFlow = url + '?metrics=flow,energy';
+
+    $httpBackend.expectGET(urlFlow).respond(200, {});
+
+    Consumptions.get(dummyId, 'day', '20150101', ['flow', 'energy']);
 
     $httpBackend.flush();
   });

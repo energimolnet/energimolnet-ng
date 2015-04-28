@@ -17,13 +17,15 @@ module.exports = function(ngModule) {
       );
 
       Consumptions.get = function get(id, granularity, ranges, metrics) {
-        metrics = metrics || 'energy';
+        metrics = metrics || ['energy'];
+        metrics = angular.isArray(metrics) ? metrics : [metrics];
+        ranges = angular.isArray(ranges) ? ranges : [ranges];
 
         return Api.request({
           method: 'GET',
           url: Url.url([this.getPath, id, granularity, ranges.join('+')]),
           params: {
-            metrics: metrics
+            metrics: metrics.join(',')
           }
         });
       };
