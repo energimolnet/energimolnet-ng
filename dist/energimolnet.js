@@ -410,10 +410,12 @@ module.exports = function(ngModule) {
 module.exports = function(ngModule) {
   ngModule.factory('emConsumptions', [
     'emResourceFactory',
-    function(resourceFactory) {
+    'energimolnetAPI',
+    'emUrl',
+    function(resourceFactory, Api, Url) {
       var Consumptions = resourceFactory(
         {default: '/consumptions'},
-        ['get'],
+        [],
         {
           forAccountPath: 'consumptions',
           forAccountMethods: 'save',
@@ -423,10 +425,16 @@ module.exports = function(ngModule) {
         }
       );
 
-      Consumptions.origGet = Consumptions.get;
+      Consumptions.get = function get(id, granularity, ranges, metric) {
+        metric = metric || 'electricity';
 
-      Consumptions.get = function get(id, granularity, ranges) {
-        return Consumptions.origGet(id + '/' + granularity + '/' + ranges.join('+'));
+        return Api.request({
+          method: 'GET',
+          url: Url.url([this.getPath, id, granularity, ranges.join('+')]),
+          params: {
+            metric: metric
+          }
+        });
       };
 
       return Consumptions;
