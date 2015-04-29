@@ -31,6 +31,7 @@ module.exports = function(ngModule) {
     'emRobotJobs',
     'emRobots',
     'emSubaccounts',
+    'emSubscribers',
     'emTokens',
     'emDateUtil',
     'energimolnetAPI',
@@ -52,6 +53,7 @@ module.exports = function(ngModule) {
       RobotJobs,
       Robots,
       Subaccounts,
+      Subscribers,
       Tokens,
       DateUtil,
       energimolnetAPI) {
@@ -85,6 +87,7 @@ module.exports = function(ngModule) {
         em.RobotJobs = RobotJobs;
         em.Robots = Robots;
         em.Subaccounts = Subaccounts;
+        em.Subscribers = Subscribers;
         em.Tokens = Tokens;
         em.DateUtil = DateUtil;
         em.api = energimolnetAPI;
