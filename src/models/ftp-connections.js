@@ -2,9 +2,15 @@ module.exports = function(ngModule) {
   ngModule.factory('emFtpConnections', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({}, [], {
-        forAccountPath: 'ftp_connections',
-        forAccountMethods: ['get', 'save', 'query', 'delete']
+      return resourceFactory({
+        forAccount: {
+          default: 'ftp_connections',
+          get: true,
+          query: true,
+          put: true,
+          post: true,
+          delete: true
+        }
       });
     }
   ]);

@@ -2,9 +2,15 @@ module.exports = function(ngModule) {
   ngModule.factory('emSubscribers', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({}, [], {
-        forAccountPath: 'meter_subscribers',
-        forAccountMethods: ['get', 'save', 'query', 'delete']
+      return resourceFactory({
+        forAccount: {
+          default: 'meter_subscribers',
+          get: true,
+          put: true,
+          post: true,
+          query: true,
+          delete: true
+        }
       });
     }
   ]);

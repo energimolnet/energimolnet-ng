@@ -8,7 +8,15 @@ module.exports = function(ngModule) {
     'energimolnetAPI',
     'emUrl',
     function(resourceFactory, Api, Url) {
-      var Meters = resourceFactory({default: '/meters'}, ['get', 'query', 'save', 'delete', 'batchUpdate']);
+      var Meters = resourceFactory({
+        default: '/meters',
+        get: true,
+        query: true,
+        put: true,
+        post: true,
+        delete: true,
+        batch: true
+      });
 
       Meters.assign = _emShareAssign(PATH_ASSIGN);
       Meters.share = _emShareAssign(PATH_SHARE);
@@ -43,7 +51,6 @@ module.exports = function(ngModule) {
           });
         };
       }
-
 
       function _emRevoke(meterIds) {
         return Api.request({

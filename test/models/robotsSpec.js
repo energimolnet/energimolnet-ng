@@ -18,7 +18,7 @@ describe('Robots', function() {
 
   it('should query API with correct run parameters', function() {
     var robotId = 'abcd';
-    var url = Url.url([Robots.getPath, robotId, 'run']);
+    var url = Url.url(['/robots', robotId, 'run']);
 
     $httpBackend.expectPOST(url).respond(200, {});
 

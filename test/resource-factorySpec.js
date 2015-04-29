@@ -19,18 +19,27 @@ describe('Resource Factory', function() {
   });
 
   it('should create services with the appropriate methods', function() {
-    var collection = resourceFactory({default: '/test'}, ['get', 'save', 'query', 'delete']);
+    var collection = resourceFactory({
+      default: '/test',
+      get: true,
+      query: '/queries',
+      delete: true,
+      post: false
+    });
 
     expect(collection.get).toBeDefined();
-    expect(collection.save).toBeDefined();
+    expect(collection.save).toBeUndefined();
     expect(collection.query).toBeDefined();
     expect(collection.delete).toBeDefined();
   });
 
   it('should return collections that return new ones using the forAccount method', function() {
-    var collection = resourceFactory({}, [], {
-      forAccountPath: 'testcollection',
-      forAccountMethods: ['get', 'query']
+    var collection = resourceFactory({
+      forAccount: {
+        default: 'testcollection',
+        get: true,
+        query: true
+      }
     });
 
     var url = Url.url(['accounts', '12345', 'testcollection', '67890']);
@@ -43,11 +52,11 @@ describe('Resource Factory', function() {
   });
 
   it('should respect custom paths for collections created using forAccount method', function() {
-    var collection = resourceFactory({}, [], {
-      forAccountPath: 'testcollection',
-      forAccountMethods: ['get', 'query'],
-      forAccountPaths: {
-        get: '/other'
+    var collection = resourceFactory({
+      forAccount: {
+        default: 'testcollection',
+        get: '/other',
+        query: 'testquery'
       }
     });
 
@@ -64,14 +73,16 @@ describe('Resource Factory', function() {
     var collection = resourceFactory({
       default: '/default',
       get: '/get',
-      save: '/save',
+      post: '/post',
+      put: '/put',
       query: '/query',
-      batchUpdate: '/batch'
-    }, ['get', 'save', 'query', 'batchUpdate', 'delete']);
+      batch: '/batch',
+      delete: true
+    });
 
     $httpBackend.expectGET(Url.url(['get', '12345'])).respond(200, {});
-    $httpBackend.expectPOST(Url.url('save')).respond(200, {});
-    $httpBackend.expectPUT(Url.url(['save', '12345'])).respond(200, {});
+    $httpBackend.expectPOST(Url.url('post')).respond(200, {});
+    $httpBackend.expectPUT(Url.url(['put', '12345'])).respond(200, {});
     $httpBackend.expectDELETE(Url.url(['default', '12345'])).respond(200, {});
     $httpBackend.expectPUT(Url.url('batch')).respond(200, {});
 

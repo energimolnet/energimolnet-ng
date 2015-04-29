@@ -364,24 +364,39 @@ module.exports = function(ngModule) {
   ngModule.factory('emAccounts', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/accounts'}, ['get', 'query', 'save', 'delete']);
+      return resourceFactory({
+        default: '/accounts',
+        get: true,
+        query: true,
+        put: true,
+        post: true,
+        delete: true
+      });
     }
   ]);
 };
+
 },{}],6:[function(require,module,exports){
 module.exports = function(ngModule) {
   ngModule.factory('emClients', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory(
-        {
-          default: '/clients'
-        },
-        ['get', 'save', 'query', 'delete'],
-        {
-          forAccountPath: 'clients',
-          forAccountMethods: ['get', 'save', 'query', 'delete']
-        });
+      return resourceFactory({
+        default: '/clients',
+        get: true,
+        put: true,
+        post: true,
+        query: true,
+        delete: true,
+        forAccount: {
+          default: 'clients',
+          get: true,
+          put: true,
+          post: true,
+          query: true,
+          delete: true
+        }
+      });
     }
   ]);
 };
@@ -391,7 +406,10 @@ module.exports = function(ngModule) {
   ngModule.factory('emConsumptionPreview', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/consumptions'}, ['get']);
+      return resourceFactory({
+        default: '/consumptions',
+        get: true
+      });
     }
   ]);
 };
@@ -402,9 +420,13 @@ module.exports = function(ngModule) {
   ngModule.factory('emConsumptionStats', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/accounts/me/consumption_stats'}, ['get'], {
-        forAccountPath: 'consumption_stats',
-        forAccountMethods: ['get']
+      return resourceFactory({
+        default: '/accounts/me/consumption_stats',
+        get: true,
+        forAccount: {
+          default: 'consumption_stats',
+          get: true
+        }
       });
     }
   ]);
@@ -417,17 +439,13 @@ module.exports = function(ngModule) {
     'energimolnetAPI',
     'emUrl',
     function(resourceFactory, Api, Url) {
-      var Consumptions = resourceFactory(
-        {default: '/consumptions'},
-        [],
-        {
-          forAccountPath: 'consumptions',
-          forAccountMethods: 'save',
-          forAccountOptions: {
-            saveMethod: 'PUT'
-          }
+      var Consumptions = resourceFactory({
+        default: '/consumptions',
+        forAccount: {
+          default: 'consumptions',
+          put: true
         }
-      );
+      });
 
       Consumptions.get = function get(id, granularity, ranges, metrics) {
         metrics = metrics || ['energy'];
@@ -436,7 +454,7 @@ module.exports = function(ngModule) {
 
         return Api.request({
           method: 'GET',
-          url: Url.url([this.getPath, id, granularity, ranges.join('+')]),
+          url: Url.url([this._config.default, id, granularity, ranges.join('+')]),
           params: {
             metrics: metrics.join(',')
           }
@@ -453,7 +471,14 @@ module.exports = function(ngModule) {
   ngModule.factory('emEdielJobs', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/ediel_jobs'}, ['get', 'query', 'save', 'delete']);
+      return resourceFactory({
+        default: '/ediel_jobs',
+        get: true,
+        query: true,
+        put: true,
+        post: true,
+        delete: true
+      });
     }
   ]);
 };
@@ -463,7 +488,14 @@ module.exports = function(ngModule) {
   ngModule.factory('emFileJobs', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/file_jobs'}, ['get', 'query', 'save', 'delete']);
+      return resourceFactory({
+        default: '/file_jobs',
+        get: true,
+        query: true,
+        put: true,
+        save: true,
+        delete: true
+      });
     }
   ]);
 };
@@ -473,9 +505,15 @@ module.exports = function(ngModule) {
   ngModule.factory('emFtpConnections', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({}, [], {
-        forAccountPath: 'ftp_connections',
-        forAccountMethods: ['get', 'save', 'query', 'delete']
+      return resourceFactory({
+        forAccount: {
+          default: 'ftp_connections',
+          get: true,
+          query: true,
+          put: true,
+          post: true,
+          delete: true
+        }
       });
     }
   ]);
@@ -486,10 +524,15 @@ module.exports = function(ngModule) {
   ngModule.factory('emMe', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/accounts/me'}, ['get', 'save'], {saveMethod: 'PUT'});
+      return resourceFactory({
+        default: '/accounts/me',
+        get: true,
+        put: true
+      });
     }
   ]);
 };
+
 },{}],14:[function(require,module,exports){
 var PATH_ASSIGN = '/meters/many/assign_to';
 var PATH_SHARE = '/meters/many/share_with';
@@ -501,7 +544,15 @@ module.exports = function(ngModule) {
     'energimolnetAPI',
     'emUrl',
     function(resourceFactory, Api, Url) {
-      var Meters = resourceFactory({default: '/meters'}, ['get', 'query', 'save', 'delete', 'batchUpdate']);
+      var Meters = resourceFactory({
+        default: '/meters',
+        get: true,
+        query: true,
+        put: true,
+        post: true,
+        delete: true,
+        batch: true
+      });
 
       Meters.assign = _emShareAssign(PATH_ASSIGN);
       Meters.share = _emShareAssign(PATH_SHARE);
@@ -537,7 +588,6 @@ module.exports = function(ngModule) {
         };
       }
 
-
       function _emRevoke(meterIds) {
         return Api.request({
           url: Url.url(PATH_REVOKE),
@@ -554,25 +604,37 @@ module.exports = function(ngModule) {
   ngModule.factory('emOwners', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/owners'}, ['get', 'query']);
+      return resourceFactory({
+        default: '/owners',
+        get: true,
+        query: true
+      });
     }
   ]);
 };
+
 },{}],16:[function(require,module,exports){
 module.exports = function(ngModule) {
   ngModule.factory('emPassword', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/accounts/me/password'}, ['save'], {saveMethod: 'PUT'});
+      return resourceFactory({
+        default: '/accounts/me/password',
+        put: true
+      });
     }
   ]);
 };
+
 },{}],17:[function(require,module,exports){
 module.exports = function(ngModule) {
   ngModule.factory('emRefreshTokens', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/refreshtokens'}, ['query']);
+      return resourceFactory({
+        default: '/refreshtokens',
+        query: true
+      });
     }
   ]);
 };
@@ -582,16 +644,27 @@ module.exports = function(ngModule) {
   ngModule.factory('emReports', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/reports'}, ['save']);
+      return resourceFactory({
+        default: '/reports',
+        post: true
+      });
     }
   ]);
 };
+
 },{}],19:[function(require,module,exports){
 module.exports = function(ngModule) {
   ngModule.factory('emRobotJobs', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({default: '/robot_jobs'}, ['get', 'query', 'save', 'delete']);
+      return resourceFactory({
+        default: '/robot_jobs',
+        get: true,
+        query: true,
+        put: true,
+        post: true,
+        delete: true
+      });
     }
   ]);
 };
@@ -603,11 +676,18 @@ module.exports = function(ngModule) {
     'emUrl',
     'energimolnetAPI',
     function(resourceFactory, Url, Api) {
-      var Robots =  resourceFactory({default: '/robots'}, ['get', 'query', 'save', 'delete']);
+      var Robots =  resourceFactory({
+        default: '/robots',
+        get: true,
+        query: true,
+        put: true,
+        post: true,
+        delete: true
+      });
 
       Robots.run = function(robotId) {
         return Api.request({
-          url: Url.url([this.getPath, robotId, 'run']),
+          url: Url.url([this._config.default, robotId, 'run']),
           method: 'POST'
         });
       };
@@ -616,16 +696,19 @@ module.exports = function(ngModule) {
     }
   ]);
 };
+
 },{}],21:[function(require,module,exports){
 module.exports = function(ngModule) {
   ngModule.factory('emSubaccounts', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({}, [], {
-        forAccountPath: 'subaccounts',
-        forAccountMethods: ['get', 'save', 'query', 'delete'],
-        forAccountPaths: {
+      return resourceFactory({
+        forAccount: {
+          default: 'subaccounts',
           get: '/accounts',
+          put: true,
+          post: true,
+          query: true,
           delete: '/accounts'
         }
       });
@@ -638,9 +721,15 @@ module.exports = function(ngModule) {
   ngModule.factory('emSubscribers', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({}, [], {
-        forAccountPath: 'meter_subscribers',
-        forAccountMethods: ['get', 'save', 'query', 'delete']
+      return resourceFactory({
+        forAccount: {
+          default: 'meter_subscribers',
+          get: true,
+          put: true,
+          post: true,
+          query: true,
+          delete: true
+        }
       });
     }
   ]);
@@ -651,9 +740,15 @@ module.exports = function(ngModule) {
   ngModule.factory('emTokens', [
     'emResourceFactory',
     function(resourceFactory) {
-      return resourceFactory({}, [], {
-        forAccountPath: 'tokens',
-        forAccountMethods: ['get', 'save', 'query', 'delete']
+      return resourceFactory({
+        forAccount: {
+          default: 'tokens',
+          get: true,
+          put: true,
+          post: true,
+          query: true,
+          delete: true
+        }
       });
     }
   ]);
@@ -664,54 +759,55 @@ module.exports = function(ngModule) {
  * This factory generates model collections for Energimolnet.
  * Use the models found in the models folder.
  */
+
+var ACCOUNTS_PATH = '/accounts';
+
 module.exports = function(ngModule) {
   ngModule.factory('emResourceFactory', [
     'emUrl',
     'energimolnetAPI',
     function (Url, Api) {
-      function resourceFactory(paths, methods, options) {
-        options = options || {};
-
+      function resourceFactory(config) {
         function Resource() {
-          this.getPath = paths.get || paths.default;
-          this.queryPath = paths.query || paths.default;
-          this.savePath = paths.save || paths.default;
-          this.deletePath = paths['delete'] || paths.default;
-          this.batchUpdatePath = paths.batchUpdate || paths.default;
-          this.options = options;
+          this._config = config;
         }
 
-        if (methods.indexOf('get') > -1) {
+        if (config.get) {
           Resource.prototype.get = _emGetResource;
         }
 
-        if (methods.indexOf('query') > -1) {
+        if (config.query) {
           Resource.prototype.query = _emQueryResource;
         }
 
-        if (methods.indexOf('save') > -1) {
+        if (config.put || config.post) {
           Resource.prototype.save = _emSaveResource;
         }
 
-        if (methods.indexOf('batchUpdate') > -1) {
+        if (config.batch) {
           Resource.prototype.batchUpdate = _emBatchUpdateResources;
         }
 
-        if (methods.indexOf('delete') > -1) {
+        if (config.delete) {
           Resource.prototype.delete = _emDeleteResource;
         }
 
-        if (options.forAccountPath !== undefined) {
+        if (config.forAccount) {
           Resource.prototype.forAccount = _emForAccount;
         }
 
         return new Resource();
       }
 
+      function _emPath(config, method) {
+        var value = config[method];
+        return value === true ? config.default : value;
+
+      }
       function _emGetResource(id) {
         return Api.request({
           method: 'GET',
-          url: Url.url([this.getPath, id])
+          url: Url.url([_emPath(this._config, 'get'), id])
         });
       }
 
@@ -720,14 +816,14 @@ module.exports = function(ngModule) {
         var data = object;
         var urlComponents;
 
-        if (object._id !== undefined || this.options.saveMethod === 'PUT') {
-          urlComponents = [this.savePath, object._id];
+        if (object._id !== undefined || !this._config.post) {
           method = 'PUT';
+          urlComponents = [_emPath(this._config, 'put'), object._id];
           data = angular.copy(object);
           delete data._id;
         } else {
           method = 'POST';
-          urlComponents = [this.savePath];
+          urlComponents = [_emPath(this._config, 'post')];
         }
 
         return Api.request({
@@ -748,7 +844,7 @@ module.exports = function(ngModule) {
 
         return Api.request({
           method: 'PUT',
-          url: Url.url([this.batchUpdatePath]),
+          url: Url.url(_emPath(this._config, 'batch')),
           data: payload
         });
       }
@@ -756,7 +852,7 @@ module.exports = function(ngModule) {
       function _emQueryResource(params) {
         return Api.request({
           method: 'GET',
-          url: Url.url(this.queryPath),
+          url: Url.url(_emPath(this._config, 'query')),
           params: _removeEmpty(params)
         });
       }
@@ -764,20 +860,23 @@ module.exports = function(ngModule) {
       function _emDeleteResource(id) {
         return Api.request({
           method: 'DELETE',
-          url: Url.url([this.deletePath, id])
+          url: Url.url([_emPath(this._config, 'delete'), id])
         });
       }
 
       function _emForAccount(id) {
-        var paths = angular.copy(this.options.forAccountPaths) || {};
+        var config = angular.copy(this._config.forAccount);
 
-        if (paths.default === undefined) {
-          paths.default = '/accounts/' + id + '/' + this.options.forAccountPath;
-        }
+        ['default', 'get', 'put', 'post', 'delete', 'query'].forEach(function(method) {
+          var value = config[method];
 
-        return resourceFactory(paths,
-                               this.options.forAccountMethods,
-                               this.options.forAccountOptions);
+          // Append accounts/id/ to paths that don't start with /
+          if (typeof value === 'string' && value[0] !== '/') {
+            config[method] = '/accounts/' + id + '/' + value;
+          }
+        });
+
+        return resourceFactory(config);
       }
 
       function _removeEmpty(object) {

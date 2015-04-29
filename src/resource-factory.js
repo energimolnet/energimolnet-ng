@@ -2,54 +2,55 @@
  * This factory generates model collections for Energimolnet.
  * Use the models found in the models folder.
  */
+
+var ACCOUNTS_PATH = '/accounts';
+
 module.exports = function(ngModule) {
   ngModule.factory('emResourceFactory', [
     'emUrl',
     'energimolnetAPI',
     function (Url, Api) {
-      function resourceFactory(paths, methods, options) {
-        options = options || {};
-
+      function resourceFactory(config) {
         function Resource() {
-          this.getPath = paths.get || paths.default;
-          this.queryPath = paths.query || paths.default;
-          this.savePath = paths.save || paths.default;
-          this.deletePath = paths['delete'] || paths.default;
-          this.batchUpdatePath = paths.batchUpdate || paths.default;
-          this.options = options;
+          this._config = config;
         }
 
-        if (methods.indexOf('get') > -1) {
+        if (config.get) {
           Resource.prototype.get = _emGetResource;
         }
 
-        if (methods.indexOf('query') > -1) {
+        if (config.query) {
           Resource.prototype.query = _emQueryResource;
         }
 
-        if (methods.indexOf('save') > -1) {
+        if (config.put || config.post) {
           Resource.prototype.save = _emSaveResource;
         }
 
-        if (methods.indexOf('batchUpdate') > -1) {
+        if (config.batch) {
           Resource.prototype.batchUpdate = _emBatchUpdateResources;
         }
 
-        if (methods.indexOf('delete') > -1) {
+        if (config.delete) {
           Resource.prototype.delete = _emDeleteResource;
         }
 
-        if (options.forAccountPath !== undefined) {
+        if (config.forAccount) {
           Resource.prototype.forAccount = _emForAccount;
         }
 
         return new Resource();
       }
 
+      function _emPath(config, method) {
+        var value = config[method];
+        return value === true ? config.default : value;
+
+      }
       function _emGetResource(id) {
         return Api.request({
           method: 'GET',
-          url: Url.url([this.getPath, id])
+          url: Url.url([_emPath(this._config, 'get'), id])
         });
       }
 
@@ -58,14 +59,14 @@ module.exports = function(ngModule) {
         var data = object;
         var urlComponents;
 
-        if (object._id !== undefined || this.options.saveMethod === 'PUT') {
-          urlComponents = [this.savePath, object._id];
+        if (object._id !== undefined || !this._config.post) {
           method = 'PUT';
+          urlComponents = [_emPath(this._config, 'put'), object._id];
           data = angular.copy(object);
           delete data._id;
         } else {
           method = 'POST';
-          urlComponents = [this.savePath];
+          urlComponents = [_emPath(this._config, 'post')];
         }
 
         return Api.request({
@@ -86,7 +87,7 @@ module.exports = function(ngModule) {
 
         return Api.request({
           method: 'PUT',
-          url: Url.url([this.batchUpdatePath]),
+          url: Url.url(_emPath(this._config, 'batch')),
           data: payload
         });
       }
@@ -94,7 +95,7 @@ module.exports = function(ngModule) {
       function _emQueryResource(params) {
         return Api.request({
           method: 'GET',
-          url: Url.url(this.queryPath),
+          url: Url.url(_emPath(this._config, 'query')),
           params: _removeEmpty(params)
         });
       }
@@ -102,20 +103,23 @@ module.exports = function(ngModule) {
       function _emDeleteResource(id) {
         return Api.request({
           method: 'DELETE',
-          url: Url.url([this.deletePath, id])
+          url: Url.url([_emPath(this._config, 'delete'), id])
         });
       }
 
       function _emForAccount(id) {
-        var paths = angular.copy(this.options.forAccountPaths) || {};
+        var config = angular.copy(this._config.forAccount);
 
-        if (paths.default === undefined) {
-          paths.default = '/accounts/' + id + '/' + this.options.forAccountPath;
-        }
+        ['default', 'get', 'put', 'post', 'delete', 'query'].forEach(function(method) {
+          var value = config[method];
 
-        return resourceFactory(paths,
-                               this.options.forAccountMethods,
-                               this.options.forAccountOptions);
+          // Append accounts/id/ to paths that don't start with /
+          if (typeof value === 'string' && value[0] !== '/') {
+            config[method] = '/accounts/' + id + '/' + value;
+          }
+        });
+
+        return resourceFactory(config);
       }
 
       function _removeEmpty(object) {
