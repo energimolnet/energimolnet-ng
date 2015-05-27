@@ -166,6 +166,7 @@ module.exports = function(ngModule) {
     'emReports',
     'emRobotJobs',
     'emRobots',
+    'emScrapers',
     'emSubaccounts',
     'emSubscribers',
     'emTokens',
@@ -188,6 +189,7 @@ module.exports = function(ngModule) {
       Reports,
       RobotJobs,
       Robots,
+      Scrapers,
       Subaccounts,
       Subscribers,
       Tokens,
@@ -222,6 +224,7 @@ module.exports = function(ngModule) {
         em.Reports = Reports;
         em.RobotJobs = RobotJobs;
         em.Robots = Robots;
+        em.Scrapers = Scrapers;
         em.Subaccounts = Subaccounts;
         em.Subscribers = Subscribers;
         em.Tokens = Tokens;
@@ -354,12 +357,13 @@ module.exports = function(ngModule) {
   require('./models/reports')(module);
   require('./models/robot-jobs')(module);
   require('./models/robots')(module);
+  require('./models/scrapers')(module);
   require('./models/subaccounts')(module);
   require('./models/subscribers')(module);
   require('./models/tokens')(module);
 })(angular);
 
-},{"./date-util":1,"./debug-util":2,"./energimolnet-api":3,"./models/accounts":5,"./models/clients":6,"./models/consumption-preview":7,"./models/consumption-stats":8,"./models/consumptions":9,"./models/ediel-jobs":10,"./models/file-jobs":11,"./models/ftp-connections":12,"./models/me":13,"./models/meters":14,"./models/owners":15,"./models/password":16,"./models/refreshtokens":17,"./models/reports":18,"./models/robot-jobs":19,"./models/robots":20,"./models/subaccounts":21,"./models/subscribers":22,"./models/tokens":23,"./resource-factory":24,"./url":25}],5:[function(require,module,exports){
+},{"./date-util":1,"./debug-util":2,"./energimolnet-api":3,"./models/accounts":5,"./models/clients":6,"./models/consumption-preview":7,"./models/consumption-stats":8,"./models/consumptions":9,"./models/ediel-jobs":10,"./models/file-jobs":11,"./models/ftp-connections":12,"./models/me":13,"./models/meters":14,"./models/owners":15,"./models/password":16,"./models/refreshtokens":17,"./models/reports":18,"./models/robot-jobs":19,"./models/robots":20,"./models/scrapers":21,"./models/subaccounts":22,"./models/subscribers":23,"./models/tokens":24,"./resource-factory":25,"./url":26}],5:[function(require,module,exports){
 module.exports = function(ngModule) {
   ngModule.factory('emAccounts', [
     'emResourceFactory',
@@ -699,6 +703,20 @@ module.exports = function(ngModule) {
 
 },{}],21:[function(require,module,exports){
 module.exports = function(ngModule) {
+  ngModule.factory('emScrapers', [
+    'emResourceFactory',
+    function(resourceFactory) {
+      return resourceFactory({
+        default: '/scrapers',
+        get: true,
+        query: true
+      });
+    }
+  ]);
+};
+
+},{}],22:[function(require,module,exports){
+module.exports = function(ngModule) {
   ngModule.factory('emSubaccounts', [
     'emResourceFactory',
     function(resourceFactory) {
@@ -716,7 +734,7 @@ module.exports = function(ngModule) {
   ]);
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 module.exports = function(ngModule) {
   ngModule.factory('emSubscribers', [
     'emResourceFactory',
@@ -735,7 +753,7 @@ module.exports = function(ngModule) {
   ]);
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 module.exports = function(ngModule) {
   ngModule.factory('emTokens', [
     'emResourceFactory',
@@ -754,7 +772,7 @@ module.exports = function(ngModule) {
   ]);
 };
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /*
  * This factory generates model collections for Energimolnet.
  * Use the models found in the models folder.
@@ -901,7 +919,7 @@ module.exports = function(ngModule) {
   ]);
 };
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /*
  * This factory generates urls for accessing the Energimolnet API
  * based on current configurations.

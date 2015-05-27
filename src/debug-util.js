@@ -30,6 +30,7 @@ module.exports = function(ngModule) {
     'emReports',
     'emRobotJobs',
     'emRobots',
+    'emScrapers',
     'emSubaccounts',
     'emSubscribers',
     'emTokens',
@@ -52,6 +53,7 @@ module.exports = function(ngModule) {
       Reports,
       RobotJobs,
       Robots,
+      Scrapers,
       Subaccounts,
       Subscribers,
       Tokens,
@@ -86,6 +88,7 @@ module.exports = function(ngModule) {
         em.Reports = Reports;
         em.RobotJobs = RobotJobs;
         em.Robots = Robots;
+        em.Scrapers = Scrapers;
         em.Subaccounts = Subaccounts;
         em.Subscribers = Subscribers;
         em.Tokens = Tokens;
