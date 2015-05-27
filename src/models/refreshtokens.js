@@ -1,11 +1,6 @@
-module.exports = function(ngModule) {
-  ngModule.factory('emRefreshTokens', [
-    'emResourceFactory',
-    function(resourceFactory) {
-      return resourceFactory({
-        default: '/refreshtokens',
-        query: true
-      });
-    }
-  ]);
+module.exports = function(emResourceFactory) {
+  return emResourceFactory({
+    default: '/refreshtokens',
+    query: true
+  });
 };

@@ -11,91 +11,63 @@
  *
  */
 
-module.exports = function(ngModule) {
-  ngModule.run([
-    '$window',
-    'emAccounts',
-    'emClients',
-    'emConsumptionPreview',
-    'emConsumptionStats',
-    'emConsumptions',
-    'emEdielJobs',
-    'emFileJobs',
-    'emFtpConnections',
-    'emMe',
-    'emMeters',
-    'emOwners',
-    'emPassword',
-    'emRefreshTokens',
-    'emReports',
-    'emRobotJobs',
-    'emRobots',
-    'emScrapers',
-    'emSubaccounts',
-    'emSubscribers',
-    'emTokens',
-    'emDateUtil',
-    'energimolnetAPI',
-    function($window,
-      Accounts,
-      Clients,
-      ConsumptionPreview,
-      ConsumptionStats,
-      Consumptions,
-      EdielJobs,
-      FileJobs,
-      FtpConnections,
-      Me,
-      Meters,
-      Owners,
-      Password,
-      RefreshTokens,
-      Reports,
-      RobotJobs,
-      Robots,
-      Scrapers,
-      Subaccounts,
-      Subscribers,
-      Tokens,
-      DateUtil,
-      energimolnetAPI) {
+module.exports = function($window,
+                          emAccounts,
+                          emClients,
+                          emConsumptionPreview,
+                          emConsumptionStats,
+                          emConsumptions,
+                          emEdielJobs,
+                          emFileJobs,
+                          emFtpConnections,
+                          emMe,
+                          emMeters,
+                          emOwners,
+                          emPassword,
+                          emRefreshTokens,
+                          emReports,
+                          emRobotJobs,
+                          emRobots,
+                          emScrapers,
+                          emSubaccounts,
+                          emSubscribers,
+                          emTokens,
+                          emDateUtil,
+                          energimolnetAPI) {
+  function em(func, condensed) {
+    func.then(function(res) {
+      if (condensed === true) {
+        $window.console.log('Response:\n', res);
+      } else {
+        $window.console.log('Response:\n', JSON.stringify(res, null, 2));
+      }
+    }, function(err) {
+      $window.console.log('Error:\n', err);
+    });
+  }
 
-        function em(func, condensed) {
-          func.then(function(res) {
-            if (condensed === true) {
-              $window.console.log('Response:\n', res);
-            } else {
-              $window.console.log('Response:\n', JSON.stringify(res, null, 2));
-            }
-          }, function(err) {
-            $window.console.log('Error:\n', err);
-          });
-        }
+  em.Accounts = emAccounts;
+  em.Clients = emClients;
+  em.ConsumptionPreview = emConsumptionPreview;
+  em.ConsumptionStats = emConsumptionStats;
+  em.Consumptions = emConsumptions;
+  em.EdielJobs = emEdielJobs;
+  em.FileJobs = emFileJobs;
+  em.FtpConnections = emFtpConnections;
+  em.Meters = emMeters;
+  em.Me = emMe;
+  em.Owners = emOwners;
+  em.Password = emPassword;
+  em.RefreshTokens = emRefreshTokens;
+  em.Reports = emReports;
+  em.RobotJobs = emRobotJobs;
+  em.Robots = emRobots;
+  em.Scrapers = emScrapers;
+  em.Subaccounts = emSubaccounts;
+  em.Subscribers = emSubscribers;
+  em.Tokens = emTokens;
+  em.DateUtil = emDateUtil;
+  em.api = energimolnetAPI;
 
-        em.Accounts = Accounts;
-        em.Clients = Clients;
-        em.ConsumptionPreview = ConsumptionPreview;
-        em.ConsumptionStats = ConsumptionStats;
-        em.Consumptions = Consumptions;
-        em.EdielJobs = EdielJobs;
-        em.FileJobs = FileJobs;
-        em.FtpConnections = FtpConnections;
-        em.Meters = Meters;
-        em.Me = Me;
-        em.Owners = Owners;
-        em.Password = Password;
-        em.RefreshTokens = RefreshTokens;
-        em.Reports = Reports;
-        em.RobotJobs = RobotJobs;
-        em.Robots = Robots;
-        em.Scrapers = Scrapers;
-        em.Subaccounts = Subaccounts;
-        em.Subscribers = Subscribers;
-        em.Tokens = Tokens;
-        em.DateUtil = DateUtil;
-        em.api = energimolnetAPI;
-
-        $window.em = em;
-    }
-  ]);
+  $window.em = em;
 };

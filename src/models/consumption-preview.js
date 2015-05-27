@@ -1,12 +1,7 @@
-module.exports = function(ngModule) {
-  ngModule.factory('emConsumptionPreview', [
-    'emResourceFactory',
-    function(resourceFactory) {
-      return resourceFactory({
-        default: '/consumptions',
-        get: true
-      });
-    }
-  ]);
+module.exports = function(emResourceFactory) {
+  return emResourceFactory({
+    default: '/consumptions',
+    get: true
+  });
 };
 

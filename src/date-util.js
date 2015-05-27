@@ -18,116 +18,114 @@
   2014-01-01.
 **/
 
-module.exports = function(ngModule) {
-  ngModule.factory('emDateUtil', function() {
-    function _zeroPaddedString(number) {
-      if (number == null) { return ''; }
+module.exports = function() {
+  function _zeroPaddedString(number) {
+    if (number == null) { return ''; }
 
-      return (number < 10 ? '0' : '') + number;
+    return (number < 10 ? '0' : '') + number;
+  }
+
+  function _periodFormat(year, month, day) {
+    if (month != null) { month ++; }
+
+    return _zeroPaddedString(year) + _zeroPaddedString(month) + _zeroPaddedString(day);
+  }
+
+  function periodsFormat(dates, func) {
+    if (!angular.isArray(dates)) { return func(dates); }
+    return dates.map(func).join('-');
+  }
+
+  function getYearPeriod(dates) {
+    return periodsFormat(dates, function(date) {
+      return _periodFormat(date.getFullYear());
+    });
+  }
+
+  function getMonthPeriod(dates) {
+    return periodsFormat(dates, function(date) {
+      return _periodFormat(date.getFullYear(), date.getMonth());
+    });
+  }
+
+  function getDayPeriod(dates) {
+    return periodsFormat(dates, function(date) {
+      return _periodFormat(date.getFullYear(), date.getMonth(), date.getDate());
+    });
+  }
+
+  function getPeriod(dates, granularity) {
+    var isRange = angular.isArray(dates) && dates.length > 1;
+
+    if (granularity === 'month') {
+      return isRange ? getMonthPeriod(dates) : getYearPeriod(dates);
     }
 
-    function _periodFormat(year, month, day) {
-      if (month != null) { month ++; }
-
-      return _zeroPaddedString(year) + _zeroPaddedString(month) + _zeroPaddedString(day);
+    if (granularity === 'day') {
+      return isRange ? getDayPeriod(dates) : getMonthPeriod(dates);
     }
 
-    function periodsFormat(dates, func) {
-      if (!angular.isArray(dates)) { return func(dates); }
-      return dates.map(func).join('-');
+    return getDayPeriod(dates);
+  }
+
+  function getDate(period) {
+    if (period.length < 4) { return new Date(); }
+
+    var components = [parseInt(period.substr(0, 4), 10)];
+    var i = 0, len = period.length;
+
+    while (4 + (i * 2) < len) {
+      components[i + 1] = parseInt(period.substr(4 + (2 * i), 2));
+      i++;
     }
 
-    function getYearPeriod(dates) {
-      return periodsFormat(dates, function(date) {
-        return _periodFormat(date.getFullYear());
-      });
+    return new Date(components[0],                          // hour
+                    components[1] ? components[1] - 1 : 0,  // month
+                    components[2] || 1,                     // day
+                    components[3] || 0,                     // hour
+                    components[4] || 0,                     // min
+                    components[5] || 0);                    // second
+  }
+
+  // Helper function for returning the number of days in a month
+  function daysInMonth(date) {
+    var d = new Date(date.getTime());
+    d.setMonth(d.getMonth() + 1);
+    d.setDate(0);
+
+    return d.getDate();
+  }
+
+  // IE and Safari fail at parsing ISO strings without : in time zone offset.
+  // This is a fix for that. This fix only accounts for whole hours in offset.
+  function parseISO(dateString) {
+    var timestamp = Date.parse(dateString);
+
+    if (!isNaN(timestamp)) {
+      return new Date(timestamp);
     }
 
-    function getMonthPeriod(dates) {
-      return periodsFormat(dates, function(date) {
-        return _periodFormat(date.getFullYear(), date.getMonth());
-      });
-    }
+    var date, offsetString, offset;
+    var components = dateString.slice(0,-5).split(/\D/).map(function(itm){
+      return parseInt(itm, 10) || 0;
+    });
 
-    function getDayPeriod(dates) {
-      return periodsFormat(dates, function(date) {
-        return _periodFormat(date.getFullYear(), date.getMonth(), date.getDate());
-      });
-    }
+    components[1]-= 1;
+    offsetString = dateString.slice(-5);
+    offset = parseInt(offsetString, 10) / 100;
 
-    function getPeriod(dates, granularity) {
-      var isRange = angular.isArray(dates) && dates.length > 1;
+    date = new Date(Date.UTC.apply(Date, components));
+    date.setHours(date.getHours() - offset);
+    return date;
+  }
 
-      if (granularity === 'month') {
-        return isRange ? getMonthPeriod(dates) : getYearPeriod(dates);
-      }
-
-      if (granularity === 'day') {
-        return isRange ? getDayPeriod(dates) : getMonthPeriod(dates);
-      }
-
-      return getDayPeriod(dates);
-    }
-
-    function getDate(period) {
-      if (period.length < 4) { return new Date(); }
-
-      var components = [parseInt(period.substr(0, 4), 10)];
-      var i = 0, len = period.length;
-
-      while (4 + (i * 2) < len) {
-        components[i + 1] = parseInt(period.substr(4 + (2 * i), 2));
-        i++;
-      }
-
-      return new Date(components[0],                          // hour
-                      components[1] ? components[1] - 1 : 0,  // month
-                      components[2] || 1,                     // day
-                      components[3] || 0,                     // hour
-                      components[4] || 0,                     // min
-                      components[5] || 0);                    // second
-    }
-
-    // Helper function for returning the number of days in a month
-    function daysInMonth(date) {
-      var d = new Date(date.getTime());
-      d.setMonth(d.getMonth() + 1);
-      d.setDate(0);
-
-      return d.getDate();
-    }
-
-    // IE and Safari fail at parsing ISO strings without : in time zone offset.
-    // This is a fix for that. This fix only accounts for whole hours in offset.
-    function parseISO(dateString) {
-      var timestamp = Date.parse(dateString);
-
-      if (!isNaN(timestamp)) {
-        return new Date(timestamp);
-      }
-
-      var date, offsetString, offset;
-      var components = dateString.slice(0,-5).split(/\D/).map(function(itm){
-        return parseInt(itm, 10) || 0;
-      });
-
-      components[1]-= 1;
-      offsetString = dateString.slice(-5);
-      offset = parseInt(offsetString, 10) / 100;
-
-      date = new Date(Date.UTC.apply(Date, components));
-      date.setHours(date.getHours() - offset);
-      return date;
-    }
-
-    return {
-      getDate: getDate,
-      getDayPeriod: getDayPeriod,
-      getMonthPeriod: getMonthPeriod,
-      getPeriod: getPeriod,
-      getYearPeriod: getYearPeriod,
-      daysInMonth: daysInMonth,
-      parseISO: parseISO,
-    }
-  });
+  return {
+    getDate: getDate,
+    getDayPeriod: getDayPeriod,
+    getMonthPeriod: getMonthPeriod,
+    getPeriod: getPeriod,
+    getYearPeriod: getYearPeriod,
+    daysInMonth: daysInMonth,
+    parseISO: parseISO,
+  };
 };

@@ -1,11 +1,6 @@
-module.exports = function(ngModule) {
-  ngModule.factory('emReports', [
-    'emResourceFactory',
-    function(resourceFactory) {
-      return resourceFactory({
-        default: '/reports',
-        post: true
-      });
-    }
-  ]);
+module.exports = function(emResourceFactory) {
+  return emResourceFactory({
+    default: '/reports',
+    post: true
+  });
 };

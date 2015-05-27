@@ -1,12 +1,7 @@
-module.exports = function(ngModule) {
-  ngModule.factory('emOwners', [
-    'emResourceFactory',
-    function(resourceFactory) {
-      return resourceFactory({
-        default: '/owners',
-        get: true,
-        query: true
-      });
-    }
-  ]);
+module.exports = function(emResourceFactory) {
+  return emResourceFactory({
+    default: '/owners',
+    get: true,
+    query: true
+  });
 };
