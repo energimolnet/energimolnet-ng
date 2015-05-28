@@ -30,13 +30,9 @@
     "angular": "^1.3.14",
     "angular-mocks": "^1.3.14",
     "browserify": "^9.0.3",
-    "browserify-ngannotate": "^0.7.3",
     "jasmine-core": "^2.2.0",
     "karma-chrome-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.5",
     "uglifyify": "^3.0.1"
-  },
-  "browserify": {
-    "transforms": ["browserify-ngannotate"]
   }
 }
