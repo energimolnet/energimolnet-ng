@@ -1,16 +1,16 @@
 describe('Resource Factory', function() {
-  var resourceFactory, $httpBackend, Url;
+  var resourceFactory, $httpBackend;
+  var BASE_URL = 'http://dummy.local';
 
   beforeEach(module('energimolnet'));
 
   beforeEach(function() {
-    angular.module('energimolnet').constant('apiBaseUrl', 'http://dummy.local/');
+    angular.module('energimolnet').constant('apiBaseUrl', BASE_URL);
   });
 
-  beforeEach(inject(function(_$httpBackend_, emResourceFactory, emUrl) {
+  beforeEach(inject(function(_$httpBackend_, emResourceFactory) {
     $httpBackend = _$httpBackend_;
     resourceFactory = emResourceFactory;
-    Url = emUrl;
   }));
 
   afterEach(function () {
@@ -42,7 +42,7 @@ describe('Resource Factory', function() {
       }
     });
 
-    var url = Url.url(['accounts', '12345', 'testcollection', '67890']);
+    var url = [BASE_URL, 'api/2.0', 'accounts', '12345', 'testcollection', '67890'].join('/');
     $httpBackend.expectGET(url).respond(200, {});
 
     var forAccountCollection = collection.forAccount("12345");
@@ -60,7 +60,7 @@ describe('Resource Factory', function() {
       }
     });
 
-    var url = Url.url(['other', '67890']);
+    var url = [BASE_URL, 'api/2.0', 'other', '67890'].join('/');
     $httpBackend.expectGET(url).respond(200, {});
 
     var forAccountCollection = collection.forAccount("12345");
@@ -80,11 +80,11 @@ describe('Resource Factory', function() {
       delete: true
     });
 
-    $httpBackend.expectGET(Url.url(['get', '12345'])).respond(200, {});
-    $httpBackend.expectPOST(Url.url('post')).respond(200, {});
-    $httpBackend.expectPUT(Url.url(['put', '12345'])).respond(200, {});
-    $httpBackend.expectDELETE(Url.url(['default', '12345'])).respond(200, {});
-    $httpBackend.expectPUT(Url.url('batch')).respond(200, {});
+    $httpBackend.expectGET(BASE_URL + '/api/2.0/get/12345').respond(200, {});
+    $httpBackend.expectPOST(BASE_URL + '/api/2.0/post').respond(200, {});
+    $httpBackend.expectPUT(BASE_URL + '/api/2.0/put/12345').respond(200, {});
+    $httpBackend.expectDELETE(BASE_URL + '/api/2.0/default/12345').respond(200, {});
+    $httpBackend.expectPUT(BASE_URL + '/api/2.0/batch').respond(200, {});
 
     collection.get('12345');
     collection.save({newItem: 'value'});

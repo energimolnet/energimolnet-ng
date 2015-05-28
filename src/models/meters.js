@@ -2,7 +2,7 @@ var PATH_ASSIGN = '/meters/many/assign_to';
 var PATH_SHARE = '/meters/many/share_with';
 var PATH_REVOKE = '/meters/many/revoke';
 
-module.exports = function(emResourceFactory, energimolnetAPI, emUrl) {
+module.exports = function(emResourceFactory, energimolnetAPI) {
   var Meters = emResourceFactory({
     default: '/meters',
     get: true,
@@ -40,7 +40,7 @@ module.exports = function(emResourceFactory, energimolnetAPI, emUrl) {
       }
 
       return energimolnetAPI.request({
-        url: emUrl.url(url),
+        url: url,
         method: 'POST',
         data: data
       });
@@ -49,7 +49,7 @@ module.exports = function(emResourceFactory, energimolnetAPI, emUrl) {
 
   function _emRevoke(meterIds) {
     return energimolnetAPI.request({
-      url: emUrl.url(PATH_REVOKE),
+      url: PATH_REVOKE,
       method: 'PUT',
       data: meterIds
     });

@@ -5,7 +5,7 @@
 
 var ACCOUNTS_PATH = '/accounts';
 
-module.exports = function (emUrl, energimolnetAPI) {
+module.exports = function (Api) {
   function resourceFactory(config) {
     function Resource() {
       this._config = config;
@@ -44,30 +44,30 @@ module.exports = function (emUrl, energimolnetAPI) {
 
   }
   function _emGetResource(id) {
-    return energimolnetAPI.request({
+    return Api.request({
       method: 'GET',
-      url: emUrl.url([_emPath(this._config, 'get'), id])
+      url: _emPath(this._config, 'get') + '/' + id
     });
   }
 
   function _emSaveResource(object) {
     var method;
     var data = object;
-    var urlComponents;
+    var path;
 
     if (object._id !== undefined || !this._config.post) {
       method = 'PUT';
-      urlComponents = [_emPath(this._config, 'put'), object._id];
+      path = _emPath(this._config, 'put') + '/' + object._id;
       data = angular.copy(object);
       delete data._id;
     } else {
       method = 'POST';
-      urlComponents = [_emPath(this._config, 'post')];
+      path = _emPath(this._config, 'post');
     }
 
-    return energimolnetAPI.request({
+    return Api.request({
       method: method,
-      url: emUrl.url(urlComponents),
+      url: path,
       data: data
     });
   }
@@ -81,25 +81,25 @@ module.exports = function (emUrl, energimolnetAPI) {
       payload.push(update);
     }
 
-    return energimolnetAPI.request({
+    return Api.request({
       method: 'PUT',
-      url: emUrl.url(_emPath(this._config, 'batch')),
+      url: _emPath(this._config, 'batch'),
       data: payload
     });
   }
 
   function _emQueryResource(params) {
-    return energimolnetAPI.request({
+    return Api.request({
       method: 'GET',
-      url: emUrl.url(_emPath(this._config, 'query')),
+      url: _emPath(this._config, 'query'),
       params: _removeEmpty(params)
     });
   }
 
   function _emDeleteResource(id) {
-    return energimolnetAPI.request({
+    return Api.request({
       method: 'DELETE',
-      url: emUrl.url([_emPath(this._config, 'delete'), id])
+      url: _emPath(this._config, 'delete') + '/' + id
     });
   }
 

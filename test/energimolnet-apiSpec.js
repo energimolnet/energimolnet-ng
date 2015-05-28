@@ -1,5 +1,6 @@
 describe('Energimolnet API tests', function() {
   var $httpBackend, api;
+  var BASE_URL = 'http://dummy.local';
 
   beforeEach(module('energimolnet'));
 
@@ -15,7 +16,7 @@ describe('Energimolnet API tests', function() {
   });
 
   it('should paginate query results', function() {
-    $httpBackend.expectGET('/query').respond(200, {
+    $httpBackend.expectGET(BASE_URL + '/api/2.0/query').respond(200, {
       data: [{_id: '1234'}, {_id: '5678'}],
       count: 200,
       skip: 0,
@@ -35,7 +36,7 @@ describe('Energimolnet API tests', function() {
   });
 
   it('should not paginate single items', function() {
-    $httpBackend.expectGET('/item').respond(200, {
+    $httpBackend.expectGET(BASE_URL + '/api/2.0/item').respond(200, {
       data: {_id: 'abcde'}
     });
 
@@ -51,7 +52,7 @@ describe('Energimolnet API tests', function() {
   it('should attach apiToken', function() {
     api.setToken('testToken');
 
-    $httpBackend.expectGET('/item', {
+    $httpBackend.expectGET(BASE_URL + '/api/2.0/item', {
       Authorization: 'OAuth testToken',
       Accept:"application/json, text/plain, */*"
     }).respond(200, {});
@@ -63,7 +64,7 @@ describe('Energimolnet API tests', function() {
   it('should remove apiToken on auth error', function() {
     api.setToken('invalidToken');
 
-    $httpBackend.expectGET('/item').respond(401, {no: 'way!'});
+    $httpBackend.expectGET(BASE_URL + '/api/2.0/item').respond(401, {no: 'way!'});
     api.request({url: '/item', method: 'GET'});
 
     expect(api.getToken()).toBe('invalidToken');

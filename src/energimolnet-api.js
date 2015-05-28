@@ -13,12 +13,19 @@
  *
  * Dont':
  *
- *   energimolnetAPI.request({url: 'http://app.../owners', params:...})
+ *   energimolnetAPI.request({url: '/owners', params:...})
  */
+var makeUrl = require('./util/makeurl');
 
-module.exports = function($http, $window, $q) {
+var PATH_API_VERSION =        'api/2.0';
+var PATH_SIGN_IN =            'security/signin';
+var PATH_SIGN_OUT =           'security/signout';
+
+module.exports = function($http, $window, $q, BASE_URL) {
   function request(config) {
     return $q(function(resolve, reject) {
+      config.url = makeUrl([BASE_URL + PATH_API_VERSION, config.url]);
+
       $http(_emAuthorize(config)).then(function(res) {
         if (res.data.count == null || res.data.limit == null || res.data.skip == null) {
           resolve(res.data.data);
@@ -33,7 +40,7 @@ module.exports = function($http, $window, $q) {
               from: (res.data.count === 0) ? 0 : res.data.skip + 1,
               to: (res.data.skip + res.data.limit > res.data.count) ? res.data.count : res.data.skip + res.data.limit
             }
-          })
+          });
         }
       }, function(res) {
         if (res.status === 401) { // User is not logged in
@@ -41,7 +48,7 @@ module.exports = function($http, $window, $q) {
         }
 
         reject(res.data != null ? res.data.errors : {});
-      })
+      });
     });
   }
 
@@ -73,9 +80,14 @@ module.exports = function($http, $window, $q) {
     return config;
   }
 
+  function loginUrl(redirect) { return BASE_URL + PATH_SIGN_IN + '?redirect=' + redirect; }
+  function logoutUrl(redirect) { return BASE_URL + PATH_SIGN_OUT + '?redirect=' + redirect; }
+
   return {
+    loginUrl: loginUrl,
+    logoutUrl: logoutUrl,
     getToken: getToken,
     setToken: setToken,
-    request: request,
+    request: request
   };
 };

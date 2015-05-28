@@ -3,16 +3,16 @@
 // in the resource-factory spec.
 
 describe('Meters', function() {
-  var Meters, $httpBackend, Url;
+  var Meters, $httpBackend;
+  var BASE_URL = 'http://dummy.local/';
 
   beforeEach(module('energimolnet'));
 
-  beforeEach(inject(function(_$httpBackend_, emMeters, emUrl) {
-    angular.module('energimolnet').constant('apiBaseUrl', 'http://dummy.local/');
+  beforeEach(inject(function(_$httpBackend_, emMeters) {
+    angular.module('energimolnet').constant('apiBaseUrl', BASE_URL);
 
     Meters = emMeters;
     $httpBackend = _$httpBackend_;
-    Url = emUrl;
   }));
 
   afterEach(function() {
@@ -24,7 +24,7 @@ describe('Meters', function() {
     it('should allow assigning of a single meter', function() {
       var meterId = '12345';
       var accountId = '67890';
-      var url = Url.url('/meters/many/assign_to');
+      var url = BASE_URL + 'api/2.0/meters/many/assign_to';
 
       $httpBackend.expectPOST(url, '[{"_id":"12345","holder":"67890"}]').respond(200, {});
 
@@ -36,7 +36,7 @@ describe('Meters', function() {
     it('should allow assigning of multiple meters', function() {
       var meterIds = ['12345', 'abcde', 'fghij'];
       var accountId = '67890';
-      var url = Url.url('/meters/many/assign_to');
+      var url = BASE_URL + 'api/2.0/meters/many/assign_to';
 
       $httpBackend.expectPOST(url, '[{"_id":"12345","holder":"67890"},{"_id":"abcde","holder":"67890"},{"_id":"fghij","holder":"67890"}]').respond(200, {});
 
@@ -50,7 +50,7 @@ describe('Meters', function() {
     it('should allow sharing of a single meter', function() {
       var meterId = '12345';
       var accountId = '67890';
-      var url = Url.url('/meters/many/share_with');
+      var url = BASE_URL + 'api/2.0/meters/many/share_with';
 
       $httpBackend.expectPOST(url, '[{"_id":"12345","holder":"67890"}]').respond(200, {});
 
@@ -62,7 +62,7 @@ describe('Meters', function() {
     it('should allow assigning of multiple meters', function() {
       var meterIds = ['12345', 'abcde', 'fghij'];
       var accountId = '67890';
-      var url = Url.url('/meters/many/share_with');
+      var url = BASE_URL + 'api/2.0/meters/many/share_with';
 
       $httpBackend.expectPOST(url, '[{"_id":"12345","holder":"67890"},{"_id":"abcde","holder":"67890"},{"_id":"fghij","holder":"67890"}]').respond(200, {});
 
@@ -75,18 +75,18 @@ describe('Meters', function() {
   describe('revoke', function() {
     it('should be able to revoke a single contract', function() {
       var meterId = 'abc123';
-      var url = Url.url('/meters/many/revoke');
+      var url = BASE_URL + 'api/2.0/meters/many/revoke';
 
       $httpBackend.expectPUT(url, '["abc123"]').respond(200, {});
 
-     Meters.revoke([meterId]); 
+     Meters.revoke([meterId]);
 
      $httpBackend.flush();
     });
 
     it('should be able to revoke multiple contracts', function() {
       var meterIds = ['abc123', '123abc'];
-      var url = Url.url('/meters/many/revoke');
+      var url = BASE_URL + 'api/2.0/meters/many/revoke';
 
       $httpBackend.expectPUT(url, '["abc123","123abc"]').respond(200, {});
 

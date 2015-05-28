@@ -1,14 +1,14 @@
 describe('Robots', function() {
-  var Robots, $httpBackend, Url;
+  var Robots, $httpBackend;
+  var BASE_URL = 'http://dummy.local';
 
   beforeEach(module('energimolnet'));
 
-  beforeEach(inject(function(_$httpBackend_, emRobots, emUrl) {
-    angular.module('energimolnet').constant('apiBaseUrl', 'http://dummy.local/');
+  beforeEach(inject(function(_$httpBackend_, emRobots) {
+    angular.module('energimolnet').constant('apiBaseUrl', BASE_URL);
 
     Robots = emRobots;
     $httpBackend = _$httpBackend_;
-    Url = emUrl;
   }));
 
   afterEach(function() {
@@ -18,7 +18,7 @@ describe('Robots', function() {
 
   it('should query API with correct run parameters', function() {
     var robotId = 'abcd';
-    var url = Url.url(['/robots', robotId, 'run']);
+    var url = [BASE_URL, 'api/2.0', 'robots', robotId, 'run'].join('/');
 
     $httpBackend.expectPOST(url).respond(200, {});
 

@@ -1,4 +1,4 @@
-module.exports = function(emResourceFactory, energimolnetAPI, emUrl) {
+module.exports = function(emResourceFactory, energimolnetAPI) {
   var Consumptions = emResourceFactory({
     default: '/consumptions',
     forAccount: {
@@ -14,7 +14,7 @@ module.exports = function(emResourceFactory, energimolnetAPI, emUrl) {
 
     return energimolnetAPI.request({
       method: 'GET',
-      url: emUrl.url([this._config.default, id, granularity, ranges.join('+')]),
+      url: [this._config.default, id, granularity, ranges.join('+')].join('/'),
       params: {
         metrics: metrics.join(',')
       }

@@ -1,4 +1,4 @@
-module.exports = function(emResourceFactory, emUrl, energimolnetAPI) {
+module.exports = function(emResourceFactory, energimolnetAPI) {
   var Robots = emResourceFactory({
     default: '/robots',
     get: true,
@@ -10,7 +10,7 @@ module.exports = function(emResourceFactory, emUrl, energimolnetAPI) {
 
   Robots.run = function(robotId) {
     return energimolnetAPI.request({
-      url: emUrl.url([this._config.default, robotId, 'run']),
+      url: [this._config.default, robotId, 'run'].join('/'),
       method: 'POST'
     });
   };
