@@ -3,6 +3,7 @@
  * Use the models found in the models folder.
  */
 
+var makeUrl = require('./util/makeurl');
 var ACCOUNTS_PATH = '/accounts';
 
 module.exports = function (Api) {
@@ -46,7 +47,7 @@ module.exports = function (Api) {
   function _emGetResource(id) {
     return Api.request({
       method: 'GET',
-      url: _emPath(this._config, 'get') + '/' + id
+      url: makeUrl([_emPath(this._config, 'get'), id])
     });
   }
 
@@ -99,7 +100,7 @@ module.exports = function (Api) {
   function _emDeleteResource(id) {
     return Api.request({
       method: 'DELETE',
-      url: _emPath(this._config, 'delete') + '/' + id
+      url: makeUrl([_emPath(this._config, 'delete'), id])
     });
   }
 

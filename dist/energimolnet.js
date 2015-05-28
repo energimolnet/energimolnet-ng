@@ -649,6 +649,7 @@ module.exports = function(emResourceFactory) {
  * Use the models found in the models folder.
  */
 
+var makeUrl = require('./util/makeurl');
 var ACCOUNTS_PATH = '/accounts';
 
 module.exports = function (Api) {
@@ -692,7 +693,7 @@ module.exports = function (Api) {
   function _emGetResource(id) {
     return Api.request({
       method: 'GET',
-      url: _emPath(this._config, 'get') + '/' + id
+      url: makeUrl([_emPath(this._config, 'get'), id])
     });
   }
 
@@ -745,7 +746,7 @@ module.exports = function (Api) {
   function _emDeleteResource(id) {
     return Api.request({
       method: 'DELETE',
-      url: _emPath(this._config, 'delete') + '/' + id
+      url: makeUrl([_emPath(this._config, 'delete'), id])
     });
   }
 
@@ -784,7 +785,7 @@ module.exports = function (Api) {
   return resourceFactory;
 };
 
-},{}],26:[function(require,module,exports){
+},{"./util/makeurl":26}],26:[function(require,module,exports){
 module.exports = function makeUrl(components) {
   components = components == null? [] : !angular.isArray(components) ? [components] : components;
   var fullPath = [];
