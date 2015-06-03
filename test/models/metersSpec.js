@@ -9,7 +9,9 @@ describe('Meters', function() {
   beforeEach(module('energimolnet'));
 
   beforeEach(inject(function(_$httpBackend_, emMeters) {
-    angular.module('energimolnet').constant('apiBaseUrl', BASE_URL);
+    angular.module('energimolnet')
+      .constant('apiBaseUrl', BASE_URL)
+      .value('authConfig', {disabled: true});
 
     Meters = emMeters;
     $httpBackend = _$httpBackend_;

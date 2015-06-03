@@ -1,21 +1,32 @@
-describe('Energimolnet API tests', function() {
-  var $httpBackend, api;
+describe('Energimolnet API', function() {
+  var $httpBackend, api, auth;
   var BASE_URL = 'http://dummy.local';
+  var refreshToken = 'refresh1234567890';
 
   beforeEach(module('energimolnet'));
 
-  beforeEach(inject(function(_$httpBackend_, energimolnetAPI) {
-    angular.module('energimolnet').constant('apiBaseUrl', 'http://dummy.local/');
+  beforeEach(function() {
+    angular.module('energimolnet')
+      .constant('apiBaseUrl', BASE_URL)
+      .value('authConfig', {disabled: false});
+  });
+
+  beforeEach(inject(function(_$httpBackend_, _$rootScope_, energimolnetAPI, emAuth) {
     $httpBackend = _$httpBackend_;
+    $rootScope = _$rootScope_;
     api = energimolnetAPI;
+    auth = emAuth;
   }));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingRequest();
     $httpBackend.verifyNoOutstandingExpectation();
+    auth.setPrivateToken(null);
   });
 
   it('should paginate query results', function() {
+    auth.setPrivateToken('testing');
+
     $httpBackend.expectGET(BASE_URL + '/api/2.0/query').respond(200, {
       data: [{_id: '1234'}, {_id: '5678'}],
       count: 200,
@@ -36,6 +47,8 @@ describe('Energimolnet API tests', function() {
   });
 
   it('should not paginate single items', function() {
+    auth.setPrivateToken('testing');
+
     $httpBackend.expectGET(BASE_URL + '/api/2.0/item').respond(200, {
       data: {_id: 'abcde'}
     });
@@ -49,8 +62,8 @@ describe('Energimolnet API tests', function() {
       $httpBackend.flush();
   });
 
-  it('should attach apiToken', function() {
-    api.setToken('testToken');
+  it('should attach private token', function() {
+    auth.setPrivateToken('testToken');
 
     $httpBackend.expectGET(BASE_URL + '/api/2.0/item', {
       Authorization: 'OAuth testToken',
@@ -61,14 +74,29 @@ describe('Energimolnet API tests', function() {
     $httpBackend.flush();
   });
 
-  it('should remove apiToken on auth error', function() {
-    api.setToken('invalidToken');
+  it('should remove private token on auth error', function() {
+    auth.setPrivateToken('invalidToken');
 
     $httpBackend.expectGET(BASE_URL + '/api/2.0/item').respond(401, {no: 'way!'});
     api.request({url: '/item', method: 'GET'});
 
-    expect(api.getToken()).toBe('invalidToken');
+    expect(auth.getPrivateToken()).toBe('invalidToken');
     $httpBackend.flush();
-    expect(api.getToken()).toBeNull();
+    expect(auth.getPrivateToken()).toBeNull();
+  });
+
+  it('should broadcast em:loginNeeded messages on $rootScope on auth errors', function() {
+    angular.module('energimolnet')
+      .value('authConfig', {disabled: false});
+
+    var loginNeededCount = 0;
+
+    $rootScope.$on('em:loginNeeded', function() {
+      loginNeededCount++;
+      expect(loginNeededCount).toBe(1);
+    });
+
+    api.request({url: '/me'});
+    $rootScope.$digest();
   });
 });

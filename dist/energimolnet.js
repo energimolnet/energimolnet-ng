@@ -1,4 +1,172 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// Authentication
+// --------------
+// Setting the private token will override all other tokens
+
+var makeUrl = require('./util/makeurl');
+
+var PATH_TOKEN =          'oauth/token';
+var PATH_SIGN_IN =        'security/signin';
+var PATH_SIGN_OUT =       'security/signout';
+
+var KEY_PRIVATE_TOKEN =   'emPrivateToken';
+var KEY_REFRESH_TOKEN =   'emRefreshToken';
+var KEY_ACCESS_TOKEN =    'emAccessToken';
+
+module.exports = function($window, $http, $q, authConfig, BASE_URL) {
+  var requestQueue = [];
+  var fetchingAccessToken = false;
+
+  function getPrivateToken() { return getToken(KEY_PRIVATE_TOKEN); }
+  function getRefreshToken() { return getToken(KEY_REFRESH_TOKEN); }
+  function getAccessToken() { return getToken(KEY_ACCESS_TOKEN); }
+
+  function setPrivateToken(token) { setToken(token, KEY_PRIVATE_TOKEN); }
+  function setRefreshToken(token) { setToken(token, KEY_REFRESH_TOKEN); }
+  function setAccessToken(token) { setToken(token, KEY_ACCESS_TOKEN); }
+
+  function getToken(key) {
+    var value = $window.localStorage.getItem(key);
+
+    if (value && (value.charAt(0) == '{' || value.charAt(0) == '[')) {
+      return JSON.parse(value);
+    }
+
+    return value;
+  }
+
+  function setToken(token, key) {
+    if (token && token.length > 0) {
+      var type = typeof token;
+
+      if (type !== 'string' && type !== 'number') {
+        key = JSON.stringify(key);
+      }
+
+      $window.localStorage.setItem(key, token);
+    } else {
+      $window.localStorage.removeItem(key);
+    }
+  }
+
+  function authorize(config) {
+    return $q(function(resolve, reject) {
+      var token = getPrivateToken();
+
+      // Check for private api token
+      if (token) {
+        config.headers = {Authorization: 'OAuth ' + token};
+        resolve(config);
+        return;
+      }
+
+      // Check if OAuth is disabled in config. In that case, browser needs to
+      // manage the authentication using session cookies
+      if (authConfig.disabled) {
+        resolve(config);
+        return;
+      }
+
+      // Check for OAuth refresh token
+      var refreshToken = getRefreshToken();
+
+      if (!refreshToken) {
+        reject();
+        return;
+      }
+
+      ensureAccessToken(refreshToken).then(function(accessToken) {
+        config.headers = {Authorization: 'Bearer ' + accessToken.access_token};
+        resolve(config);
+      }, function() {
+        reject();
+      });
+    });
+  }
+
+  function ensureAccessToken(refreshToken) {
+    return $q(function(resolve, reject) {
+      var accessToken = getAccessToken();
+
+      if (isValidToken(accessToken) && accessToken.refresh_token === refreshToken) {
+        // User has a valid access token already, resolve with it
+        resolve(accessToken);
+      } else {
+        // User has no valid token
+        requestQueue.push(function(newAccessToken) {
+          if (newAccessToken) {
+            resolve(newAccessToken);
+          } else {
+            reject();
+          }
+        });
+
+        // Only fetch token if we're not already fetching it
+        if (!fetchingAccessToken) {
+          fetchingAccessToken = true;
+
+          fetchAccessToken(refreshToken).then(function(res) {
+            var newToken = res.data;
+
+            setAccessToken(newToken);
+            fetchingAccessToken = false;
+
+            // Process any pending requests
+            requestQueue.forEach(function(queueFunc) {
+              queueFunc(newToken);
+            });
+
+            // Clear queue
+            requestQueue = [];
+          }, function(err) {
+            setAccessToken(null);
+            fetchingAccessToken = false;
+
+            // Process any pending requests
+            requestQueue.forEach(function(queueFunc) {
+              queueFunc(null);
+            });
+
+            // Clear queue
+            requestQueue = [];
+          });
+        }
+      }
+    });
+  }
+
+  function isValidToken(token) {
+    return (token && token.expires_at > Date.now());
+  }
+
+  function fetchAccessToken(refreshToken) {
+    return $http.post(makeUrl([BASE_URL, PATH_TOKEN]), {
+      client_id: authConfig.clientId,
+      client_secret: authConfig.clientSecret,
+      grant_type: 'refresh_token',
+      scope: 'basic',
+      refresh_token: refreshToken
+    }).then(function(token) {
+      token.expires_at = Date.now() + token.expires_in * 1000;
+      return token;
+    });
+  }
+
+  function loginUrl(redirect) { return BASE_URL + PATH_SIGN_IN + '?redirect=' + redirect; }
+  function logoutUrl(redirect) { return BASE_URL + PATH_SIGN_OUT + '?redirect=' + redirect; }
+
+  return {
+    getPrivateToken: getPrivateToken,
+    setPrivateToken: setPrivateToken,
+    getRefreshToken: getRefreshToken,
+    setRefreshToken: setRefreshToken,
+    loginUrl: loginUrl,
+    logoutUrl: logoutUrl,
+    authorize: authorize
+  };
+};
+
+},{"./util/makeurl":27}],2:[function(require,module,exports){
 /**
   DateUtil
   --------
@@ -129,7 +297,7 @@ function parseISO(dateString) {
   return date;
 }
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 /*
  * This attaches an em object to window that can be used for testing
  * and debugging.
@@ -204,7 +372,7 @@ module.exports = function($window,
   $window.em = em;
 };
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /*
  * This service performs communication with Energimolnet API.
  * It formats requests to required format and parses the
@@ -225,81 +393,65 @@ module.exports = function($window,
 var makeUrl = require('./util/makeurl');
 
 var PATH_API_VERSION =        'api/2.0';
-var PATH_SIGN_IN =            'security/signin';
-var PATH_SIGN_OUT =           'security/signout';
+var EVENT_LOGIN_NEEDED =      'em:loginNeeded';
 
-module.exports = function($http, $window, $q, BASE_URL) {
+module.exports = function($http, $q, $rootScope, Auth, BASE_URL) {
   function request(config) {
     return $q(function(resolve, reject) {
-      config.url = makeUrl([BASE_URL + PATH_API_VERSION, config.url]);
+      config.url = makeUrl([BASE_URL, PATH_API_VERSION, config.url]);
 
-      $http(_emAuthorize(config)).then(function(res) {
-        if (res.data.count == null || res.data.limit == null || res.data.skip == null) {
-          resolve(res.data.data);
-        } else {
-          resolve({
-            data: res.data.data,
-            pagination: {
-              skip: res.data.skip,
-              limit: res.data.limit,
-              count: res.data.count,
-              page: 1 + (res.data.skip / res.data.limit),
-              from: (res.data.count === 0) ? 0 : res.data.skip + 1,
-              to: (res.data.skip + res.data.limit > res.data.count) ? res.data.count : res.data.skip + res.data.limit
+      Auth.authorize(config).then(function(config) {
+        $http(config).then(function(res) {
+          resolve(parseResponse(res));
+        }, function(res) {
+          if (res.status === 401) {
+            // Reset private token if it existed
+            if (Auth.getPrivateToken()) {
+              Auth.setPrivateToken(null);
+              // TODO: Retry request
+              loginNeeded();
+            } else {
+              loginNeeded();
             }
-          });
-        }
-      }, function(res) {
-        if (res.status === 401) { // User is not logged in
-          setToken(undefined);
-        }
+          }
 
-        reject(res.data != null ? res.data.errors : {});
+          reject(res.data ? res.data.errors : {});
+        });
+      }, function() {
+        loginNeeded();
+        reject({});
       });
     });
   }
 
-  // Impersonation
-  // -------------
-  // Setting the API token will override the session authentication (if any)
-  var KEY_API_TOKEN = 'energimolnetApiToken';
-
-  function getToken() {
-    return $window.localStorage.getItem(KEY_API_TOKEN);
+  function loginNeeded() {
+    $rootScope.$broadcast(EVENT_LOGIN_NEEDED);
   }
 
-  function setToken(token) {
-    if (token != null && token.length > 0) {
-      $window.localStorage.setItem(KEY_API_TOKEN, token);
+  function parseResponse(res) {
+    if (res.data.count == null || res.data.limit == null || res.data.skip == null) {
+      return res.data.data;
     } else {
-      $window.localStorage.removeItem(KEY_API_TOKEN);
+      return {
+        data: res.data.data,
+        pagination: {
+          skip: res.data.skip,
+          limit: res.data.limit,
+          count: res.data.count,
+          page: 1 + (res.data.skip / res.data.limit),
+          from: (res.data.count === 0) ? 0 : res.data.skip + 1,
+          to: (res.data.skip + res.data.limit > res.data.count) ? res.data.count : res.data.skip + res.data.limit
+        }
+      };
     }
   }
-
-  // Pre-processing of request
-  function _emAuthorize(config) {
-    var token = getToken();
-
-    if (token != null) {
-      config.headers = {Authorization: 'OAuth ' + token};
-    }
-
-    return config;
-  }
-
-  function loginUrl(redirect) { return BASE_URL + PATH_SIGN_IN + '?redirect=' + redirect; }
-  function logoutUrl(redirect) { return BASE_URL + PATH_SIGN_OUT + '?redirect=' + redirect; }
 
   return {
-    loginUrl: loginUrl,
-    logoutUrl: logoutUrl,
-    getToken: getToken,
-    setToken: setToken,
     request: request
   };
 };
 
-},{"./util/makeurl":26}],4:[function(require,module,exports){
+},{"./util/makeurl":27}],5:[function(require,module,exports){
 /*
  * This file glues all the separate components together.
  * Angular needs to be globally available.
@@ -314,7 +466,8 @@ if (typeof module === 'object') {
 
 module
   .factory('emDateUtil', function() { return require('./date-util'); })
-  .factory('energimolnetAPI', ['$http', '$window', '$q', 'apiBaseUrl', require('./energimolnet-api')])
+  .factory('emAuth', ['$window', '$http', '$q', 'authConfig', 'apiBaseUrl', require('./auth')])
+  .factory('energimolnetAPI', ['$http', '$q', '$rootScope', 'emAuth', 'apiBaseUrl', require('./energimolnet-api')])
   .factory('emResourceFactory', ['energimolnetAPI', require('./resource-factory')])
 
   .factory('emAccounts', ['emResourceFactory', require('./models/accounts')])
@@ -340,7 +493,7 @@ module
 
   .run(['$window', 'emAccounts', 'emClients', 'emConsumptionPreview', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFileJobs', 'emFtpConnections', 'emMe', 'emMeters', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', require('./debug-util')]);
 
-},{"./date-util":1,"./debug-util":2,"./energimolnet-api":3,"./models/accounts":5,"./models/clients":6,"./models/consumption-preview":7,"./models/consumption-stats":8,"./models/consumptions":9,"./models/ediel-jobs":10,"./models/file-jobs":11,"./models/ftp-connections":12,"./models/me":13,"./models/meters":14,"./models/owners":15,"./models/password":16,"./models/refreshtokens":17,"./models/reports":18,"./models/robot-jobs":19,"./models/robots":20,"./models/scrapers":21,"./models/subaccounts":22,"./models/subscribers":23,"./models/tokens":24,"./resource-factory":25}],5:[function(require,module,exports){
+},{"./auth":1,"./date-util":2,"./debug-util":3,"./energimolnet-api":4,"./models/accounts":6,"./models/clients":7,"./models/consumption-preview":8,"./models/consumption-stats":9,"./models/consumptions":10,"./models/ediel-jobs":11,"./models/file-jobs":12,"./models/ftp-connections":13,"./models/me":14,"./models/meters":15,"./models/owners":16,"./models/password":17,"./models/refreshtokens":18,"./models/reports":19,"./models/robot-jobs":20,"./models/robots":21,"./models/scrapers":22,"./models/subaccounts":23,"./models/subscribers":24,"./models/tokens":25,"./resource-factory":26}],6:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/accounts',
@@ -352,7 +505,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/clients',
@@ -372,7 +525,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/consumptions',
@@ -381,7 +534,7 @@ module.exports = function(emResourceFactory) {
 };
 
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/accounts/me/consumption_stats',
@@ -393,7 +546,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = function(emResourceFactory, energimolnetAPI) {
   var Consumptions = emResourceFactory({
     default: '/consumptions',
@@ -420,7 +573,7 @@ module.exports = function(emResourceFactory, energimolnetAPI) {
   return Consumptions;
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/ediel_jobs',
@@ -432,7 +585,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/file_jobs',
@@ -444,7 +597,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     forAccount: {
@@ -458,7 +611,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/accounts/me',
@@ -467,7 +620,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var PATH_ASSIGN = '/meters/many/assign_to';
 var PATH_SHARE = '/meters/many/share_with';
 var PATH_REVOKE = '/meters/many/revoke';
@@ -526,7 +679,7 @@ module.exports = function(emResourceFactory, energimolnetAPI) {
   }
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/owners',
@@ -535,7 +688,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/accounts/me/password',
@@ -543,7 +696,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/refreshtokens',
@@ -551,7 +704,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/reports',
@@ -559,7 +712,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/robot_jobs',
@@ -571,7 +724,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 module.exports = function(emResourceFactory, energimolnetAPI) {
   var Robots = emResourceFactory({
     default: '/robots',
@@ -592,7 +745,7 @@ module.exports = function(emResourceFactory, energimolnetAPI) {
   return Robots;
 };
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/scrapers',
@@ -601,7 +754,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     forAccount: {
@@ -615,7 +768,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     forAccount: {
@@ -629,7 +782,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     forAccount: {
@@ -643,7 +796,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /*
  * This factory generates model collections for Energimolnet.
  * Use the models found in the models folder.
@@ -785,7 +938,7 @@ module.exports = function (Api) {
   return resourceFactory;
 };
 
-},{"./util/makeurl":26}],26:[function(require,module,exports){
+},{"./util/makeurl":27}],27:[function(require,module,exports){
 module.exports = function makeUrl(components) {
   components = components == null? [] : !angular.isArray(components) ? [components] : components;
   var fullPath = [];
@@ -803,4 +956,4 @@ module.exports = function makeUrl(components) {
   return fullPath.join('/');
 };
 
-},{}]},{},[4]);
+},{}]},{},[5]);

@@ -5,7 +5,9 @@ describe('Robots', function() {
   beforeEach(module('energimolnet'));
 
   beforeEach(inject(function(_$httpBackend_, emRobots) {
-    angular.module('energimolnet').constant('apiBaseUrl', BASE_URL);
+    angular.module('energimolnet')
+      .constant('apiBaseUrl', BASE_URL)
+      .value('authConfig', {disabled: true});
 
     Robots = emRobots;
     $httpBackend = _$httpBackend_;

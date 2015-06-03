@@ -5,7 +5,9 @@ describe('Resource Factory', function() {
   beforeEach(module('energimolnet'));
 
   beforeEach(function() {
-    angular.module('energimolnet').constant('apiBaseUrl', BASE_URL);
+    angular.module('energimolnet')
+      .constant('apiBaseUrl', BASE_URL)
+      .value('authConfig', {disabled: true});
   });
 
   beforeEach(inject(function(_$httpBackend_, emResourceFactory) {

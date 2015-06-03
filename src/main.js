@@ -12,7 +12,8 @@ if (typeof module === 'object') {
 
 module
   .factory('emDateUtil', function() { return require('./date-util'); })
-  .factory('energimolnetAPI', ['$http', '$window', '$q', 'apiBaseUrl', require('./energimolnet-api')])
+  .factory('emAuth', ['$window', '$http', '$q', 'authConfig', 'apiBaseUrl', require('./auth')])
+  .factory('energimolnetAPI', ['$http', '$q', '$rootScope', 'emAuth', 'apiBaseUrl', require('./energimolnet-api')])
   .factory('emResourceFactory', ['energimolnetAPI', require('./resource-factory')])
 
   .factory('emAccounts', ['emResourceFactory', require('./models/accounts')])

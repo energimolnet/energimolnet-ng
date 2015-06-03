@@ -1,9 +1,13 @@
 describe('DateUtil', function() {
   var DateUtill;
+  var BASE_URL = 'http://dummy.local';
+
   beforeEach(module('energimolnet'));
 
   beforeEach(function() {
-    angular.module('energimolnet').constant('apiBaseUrl', 'http://dummy.local/');
+    angular.module('energimolnet')
+      .constant('apiBaseUrl', BASE_URL)
+      .value('authConfig', {disabled: true});
   });
 
   beforeEach(inject(function(emDateUtil) {
