@@ -8,37 +8,95 @@ Currently, we recommend installing via bower:
 bower install energimolnet/energimolnet-ng
 ```
 
+The SDK depends on Angular, however it is not listed as a dependency in bower to let you choose where to get it from (i.e. bower/npm/other package manager). It has been tested with Angular 1.3.
+
 ## Building
 
-Building requires node.js. Simply clone this repo, and run
+There should be little need for building the library yourself (except for when helping us fix bugs ;) ). Building requires node.js. Simply clone this repo, and run
 ```
 npm install && npm start
 ```
 
 This will output two files in the dist/ folder, `energimolnet.js` and the minified version `energimolnet.min.js`, built with the latest source from src/ folder.
 
-The dist-files are available in the repo, so there should be no need to build in this way. Since angular uses its own module system, we have not provided node-style modules.
+The dist-files are available in the repo, so there should be no need to build in this way. Since angular uses its own module system, we have not provided node-style modules. Our intention for the future is to provide a pure JS version, however we currently depend too much on Angular's `$http` service and `$rootScope` for events.
 
 ## Usage example
 
 Documentation regarding authentication, the available endpoints, and response data format can be found [at Apiary](http://docs.energimolnetv2.apiary.io/). Note that the 2.0 API is currently in BETA and will change prior to public release.
 
-### Authenticating user
+## Authenticating user
 
-Prior to requesting data from the API, you need to authenticate a user using [OAuth](http://en.wikipedia.org/wiki/OAuth). You are responsible for authenticating the user, refreshing the tokens and appending the token to all requests. There are several libraries for Angular/Cordova that manages oAuth, and you're free to choose the one that suits your project the best.
+There are currently three ways of authenticating a user.
 
-While developing, it might be convenient to use your private developer key. This key can be injected using the `setToken` method on `energimolnetAPI`.
++ OAuth
++ Private token
++ Manual authentication
+
+### Oauth
+
+In order to use [OAuth](http://en.wikipedia.org/wiki/OAuth), you need to register a `client id` and `client secret` with Energimolnet. Contact [support@energimolnet.se](mailto:support@energimolnet.se) if you are interested in developing services on Energimolnet.
+
+When you have recieved your `client id` and `client secret` for your application, you need to configure the auth service to use these values.
+
+```
+angular.module('myModule').constant('authConfig', {
+  disabled: false,
+  clientId: <your client id>,
+  clientSecret: <your client secret>,
+  redirectUri: <the uri your app resides at, i.e. a web server or app url scheme>
+});
+```
+
+Note that the redirectUri is specific for the client, so you'll need to update the client settings on Energimolnet in order to change the URI of your app.
+
+When the SDK detects unauthenticated api access, it will emit a `em:loginNeeded` event on `$rootScope`. You should listen to this event and redirect the user to the login URL.
 
 ```
 angular.module('myApp').run([
-  'energimolnetAPI',
-  function(api) {
-    api.setToken('myVerySecretTokenThatIShallNotCommitToPublicRepos');
+  '$rootScope',
+  '$window',
+  'emAuth',
+  function($rootScope, $window, Auth) {
+    $rootScope.$on('em:loginNeeded', function() {
+      var appUri = 'http://energyapplication.mycompany.net';
+      $window.location.href = Auth.loginUrl(appUri);
+    });
   }
 ]);
 ```
 
-### Collection model structure
+### Private token
+While developing, it might be convenient to use your private developer key. This key can be injected using the `setPrivateToken` method on `emAuth`. Remember to keep it from being commited to public repos.
+
+_In .gitignored config file_
+
+```
+angular.module('myConfig').constant('privateToken', 'myVerySecretTokenThatIShallNotCommitToPublicRepos');
+```
+
+_In main app_
+
+```
+angular.module('myApp').run([
+  'emAuth',
+  'privateToken'
+  function(auth, privateToken) {
+    auth.setPrivateToken(privateToken);
+  }
+]);
+```
+
+The private key will always be used when available, overriding any OAuth authorization. To remove the private token, simply call `setPrivateToken(null)` on the `emAuth` service.
+
+### Manual authentication
+If you manually want to handle OAuth tokens, you can configure the `emAuth` service to disable OAuth.
+
+```
+angular.module('myModule').constant('authConfig', {disabled: true});
+```
+
+## Collection model structure
 
 Typically, you talk to the API using our collection models. For a list of what models are available in the SDK, check the `src/models` folder. The aim is that any public endpoint should have a matching collection model in the SDK.
 
