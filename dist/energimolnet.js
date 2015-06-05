@@ -49,6 +49,10 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
     }
   }
 
+  function isAuthenticated() {
+    return (getPrivateToken() !== null || getRefreshToken() !== null);
+  }
+
   function authorize(config) {
     return $q(function(resolve, reject) {
       var token = getPrivateToken();
@@ -160,6 +164,7 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
     setPrivateToken: setPrivateToken,
     getRefreshToken: getRefreshToken,
     setRefreshToken: setRefreshToken,
+    isAuthenticated: isAuthenticated,
     loginUrl: loginUrl,
     logoutUrl: logoutUrl,
     authorize: authorize

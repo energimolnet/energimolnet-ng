@@ -69,6 +69,20 @@ describe('Energimolnet Auth', function() {
     expect(auth.getRefreshToken()).toEqual(refreshToken);
   });
 
+  it('should say it is not authenticated when it has no refresh or private token', function() {
+    expect(auth.isAuthenticated()).toBe(false);
+  });
+
+  it('should say it is authenticated when it has a refresh token', function() {
+    auth.setRefreshToken(refreshToken);
+    expect(auth.isAuthenticated()).toBe(true);
+  });
+
+  it('should say it is authenticated when it has a private token', function() {
+    auth.setPrivateToken('privateToken');
+    expect(auth.isAuthenticated()).toBe(true);
+  });
+
   it('should request access tokens when perfoming an api request and no access token is available', function() {
     auth.setRefreshToken(refreshToken);
 
