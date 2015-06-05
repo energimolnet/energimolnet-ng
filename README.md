@@ -33,6 +33,8 @@ There are currently three ways of authenticating a user.
 + Private token
 + Manual authentication
 
+The `emAuth` service has a `isAuthenticated()` method that returns whether the user has either a private or refresh token set.
+
 ### Oauth
 
 In order to use [OAuth](http://en.wikipedia.org/wiki/OAuth), you need to register a `client id` and `client secret` with Energimolnet. Contact [support@energimolnet.se](mailto:support@energimolnet.se) if you are interested in developing services on Energimolnet.
