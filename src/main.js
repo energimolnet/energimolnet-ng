@@ -4,13 +4,13 @@
  */
 
 var MODULE_NAME = 'energimolnet';
-var module = angular.module(MODULE_NAME, []);
+var ngModule = angular.module(MODULE_NAME, []);
 
 if (typeof module === 'object') {
   module.exports = MODULE_NAME;
 }
 
-module
+ngModule
   .factory('emDateUtil', function() { return require('./date-util'); })
   .factory('emAuth', ['$window', '$http', '$q', 'authConfig', 'apiBaseUrl', require('./auth')])
   .factory('energimolnetAPI', ['$http', '$q', '$rootScope', 'emAuth', 'apiBaseUrl', require('./energimolnet-api')])
