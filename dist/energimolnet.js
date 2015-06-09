@@ -805,6 +805,9 @@ module.exports = function(emResourceFactory, Api) {
       url: makeUrl([this._config.default, id]),
       data: {
         revoke_meters: revokeMeters || false
+      },
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
       }
     });
   }
