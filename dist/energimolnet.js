@@ -493,7 +493,7 @@ ngModule
   .factory('emRobots', ['emResourceFactory', 'energimolnetAPI', require('./models/robots')])
   .factory('emScrapers', ['emResourceFactory', require('./models/scrapers')])
   .factory('emSubaccounts', ['emResourceFactory', require('./models/subaccounts')])
-  .factory('emSubscribers', ['emResourceFactory', require('./models/subscribers')])
+  .factory('emSubscribers', ['emResourceFactory', 'energimolnetAPI', require('./models/subscribers')])
   .factory('emTokens', ['emResourceFactory', require('./models/tokens')])
 
   .run(['$window', 'emAccounts', 'emClients', 'emConsumptionPreview', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFileJobs', 'emFtpConnections', 'emMe', 'emMeters', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', require('./debug-util')]);
@@ -774,20 +774,45 @@ module.exports = function(emResourceFactory) {
 };
 
 },{}],24:[function(require,module,exports){
-module.exports = function(emResourceFactory) {
-  return emResourceFactory({
+var makeUrl = require('../util/makeurl');
+
+module.exports = function(emResourceFactory, Api) {
+  var Subscribers = emResourceFactory({
     forAccount: {
       default: 'meter_subscribers',
       get: true,
       put: true,
       post: true,
       query: true,
-      delete: true
+      delete: false
     }
   });
+
+  Subscribers._forAccount = Subscribers.forAccount;
+
+  Subscribers.forAccount = function (account) {
+    var SubscribersForAccount = Subscribers._forAccount(account);
+    SubscribersForAccount.delete = _subscribersDelete;
+
+    return SubscribersForAccount;
+  };
+
+  // Revoke meters argument determines whether the meters shared through a
+  // subscription shouldshould be revoked. Default is false
+  function _subscribersDelete(id, revokeMeters) {
+    return Api.request({
+      method: 'DELETE',
+      url: makeUrl([this._config.default, id]),
+      data: {
+        revoke_meters: revokeMeters || false
+      }
+    });
+  }
+
+  return Subscribers;
 };
 
-},{}],25:[function(require,module,exports){
+},{"../util/makeurl":27}],25:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     forAccount: {

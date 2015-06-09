@@ -34,7 +34,7 @@ ngModule
   .factory('emRobots', ['emResourceFactory', 'energimolnetAPI', require('./models/robots')])
   .factory('emScrapers', ['emResourceFactory', require('./models/scrapers')])
   .factory('emSubaccounts', ['emResourceFactory', require('./models/subaccounts')])
-  .factory('emSubscribers', ['emResourceFactory', require('./models/subscribers')])
+  .factory('emSubscribers', ['emResourceFactory', 'energimolnetAPI', require('./models/subscribers')])
   .factory('emTokens', ['emResourceFactory', require('./models/tokens')])
 
   .run(['$window', 'emAccounts', 'emClients', 'emConsumptionPreview', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFileJobs', 'emFtpConnections', 'emMe', 'emMeters', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', require('./debug-util')]);
