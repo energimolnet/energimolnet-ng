@@ -156,8 +156,13 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
     });
   }
 
-  function loginUrl(redirect) { return BASE_URL + PATH_SIGN_IN + '?redirect=' + redirect; }
-  function logoutUrl(redirect) { return BASE_URL + PATH_SIGN_OUT + '?redirect=' + redirect; }
+  function loginUrl(redirect) {
+    return makeUrl([BASE_URL, PATH_SIGN_IN]) + '?redirect=' + encodeURIComponent(redirect);
+  }
+
+  function logoutUrl(redirect) {
+    return makeUrl([BASE_URL,PATH_SIGN_OUT]) + '?redirect=' + encodeURIComponent(redirect);
+  }
 
   return {
     getPrivateToken: getPrivateToken,

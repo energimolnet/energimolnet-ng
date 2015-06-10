@@ -217,4 +217,14 @@ describe('Energimolnet Auth', function() {
 
     $httpBackend.flush();
   });
+
+  it('should create redirect url with a given redirect uri', function() {
+    var redirectUri = 'http://dummier.localhost/path';
+    var loginUrl = auth.loginUrl(redirectUri);
+
+    var expectedUrl = BASE_URL + '/security/signin?redirect=http%3A%2F%2Fdummier.localhost%2Fpath';
+    expect(loginUrl).toBe(expectedUrl);
+
+    
+  });
 });
