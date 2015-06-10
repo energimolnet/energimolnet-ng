@@ -162,10 +162,28 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
       client_secret: authConfig.clientSecret,
       client_id: authConfig.clientId,
       redirect_uri: authConfig.redirectUri,
-      grant_type: 'refresh_token'
+      grant_type: 'authorization_code',
+      response_type: 'code',
+      state: 'emAuth',
+      scope: 'basic'
     };
 
     return makeUrl([BASE_URL, PATH_AUTHORIZE], params);
+  }
+
+  function handleAuthCode(code) {
+    return $http.post(makeUrl([BASE_URL, PATH_TOKEN]), {
+      grant_type: 'authorization_code',
+      code: 'code',
+      client_id: authConfig.clientId,
+      client_secret: authConfig.clientSecret,
+      state: 'emAuth',
+      scope: 'basic',
+      redirect_uri: authConfig.redirectUri
+    }).then(function(data) {
+      _this.setRefreshToken(data.refresh_token);
+      _this.setAccessToken(data.access_token);
+    });
   }
 
   function loginUrl(redirect) {
