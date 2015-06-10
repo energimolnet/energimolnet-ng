@@ -6,6 +6,7 @@
 var makeUrl = require('./util/makeurl');
 
 var PATH_TOKEN =          'oauth/token';
+var PATH_AUTHORIZE =        'oauth/authorize';
 var PATH_SIGN_IN =        'security/signin';
 var PATH_SIGN_OUT =       'security/signout';
 
@@ -156,6 +157,17 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
     });
   }
 
+  function authorizeUrl() {
+    var params = {
+      client_secret: authConfig.clientSecret,
+      client_id: authConfig.clientId,
+      redirect_uri: authConfig.redirectUri,
+      grant_type: 'refresh_token'
+    };
+
+    return makeUrl([BASE_URL, PATH_AUTHORIZE], params);
+  }
+
   function loginUrl(redirect) {
     return makeUrl([BASE_URL, PATH_SIGN_IN]) + '?redirect=' + encodeURIComponent(redirect);
   }
@@ -172,6 +184,7 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
     isAuthenticated: isAuthenticated,
     loginUrl: loginUrl,
     logoutUrl: logoutUrl,
+    authorizeUrl: authorizeUrl,
     authorize: authorize
   };
 };
@@ -977,7 +990,7 @@ module.exports = function (Api) {
 };
 
 },{"./util/makeurl":27}],27:[function(require,module,exports){
-module.exports = function makeUrl(components) {
+module.exports = function makeUrl(components, params) {
   components = components == null? [] : !angular.isArray(components) ? [components] : components;
   var fullPath = [];
 
@@ -991,7 +1004,17 @@ module.exports = function makeUrl(components) {
     fullPath.push(component.replace(/^\/|\/$/, ''));
   }
 
-  return fullPath.join('/');
+  var path = fullPath.join('/') + '?';
+
+  if (typeof params === 'object') {
+    for (var key in params) {
+      var value = params[key];
+
+      path += key + '=' + encodeURIComponent(value) + '&';
+    }
+  }
+
+  return path.slice(0, -1);
 };
 
 },{}]},{},[5]);

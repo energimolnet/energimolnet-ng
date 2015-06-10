@@ -12,7 +12,7 @@ describe('Energimolnet Auth', function() {
         disabled: false,
         clientId: 'testClientID',
         clientSecret: 'testClientSecret',
-        redirectUri: 'http://dummy.local'
+        redirectUri: 'http://dummier.local/path'
       });
   });
 
@@ -218,13 +218,18 @@ describe('Energimolnet Auth', function() {
     $httpBackend.flush();
   });
 
-  it('should create redirect url with a given redirect uri', function() {
-    var redirectUri = 'http://dummier.localhost/path';
-    var loginUrl = auth.loginUrl(redirectUri);
+  it('should create an authorization url that contains redirect uri', function() {
+    var authUrl = auth.authorizeUrl();
+    expect(authUrl.indexOf('redirect_uri=http%3A%2F%2Fdummier.local%2Fpath') > 0).toBe(true);
+  });
 
-    var expectedUrl = BASE_URL + '/security/signin?redirect=http%3A%2F%2Fdummier.localhost%2Fpath';
-    expect(loginUrl).toBe(expectedUrl);
+  it('should create an authorization url that contains client id', function() {
+    var authUrl = auth.authorizeUrl();
+    expect(authUrl.indexOf('client_id=testClientID') > 0).toBe(true);
+  });
 
-    
+  it('should create an authorization url that contains client secret', function() {
+    var authUrl = auth.authorizeUrl();
+    expect(authUrl.indexOf('client_secret=testClientSecret') > 0).toBe(true);
   });
 });
