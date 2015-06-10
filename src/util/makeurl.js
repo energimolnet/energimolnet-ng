@@ -1,4 +1,4 @@
-module.exports = function makeUrl(components) {
+module.exports = function makeUrl(components, params) {
   components = components == null? [] : !angular.isArray(components) ? [components] : components;
   var fullPath = [];
 
@@ -12,5 +12,15 @@ module.exports = function makeUrl(components) {
     fullPath.push(component.replace(/^\/|\/$/, ''));
   }
 
-  return fullPath.join('/');
+  var path = fullPath.join('/') + '?';
+
+  if (typeof params === 'object') {
+    for (var key in params) {
+      var value = params[key];
+
+      path += key + '=' + encodeURIComponent(value) + '&';
+    }
+  }
+
+  return path.slice(0, -1);
 };
