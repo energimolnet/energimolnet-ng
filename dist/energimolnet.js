@@ -203,6 +203,7 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
     loginUrl: loginUrl,
     logoutUrl: logoutUrl,
     authorizeUrl: authorizeUrl,
+    handleAuthCode: handleAuthCode,
     authorize: authorize
   };
 };
