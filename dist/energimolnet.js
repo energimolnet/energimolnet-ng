@@ -375,7 +375,8 @@ module.exports = function($window,
                           emSubscribers,
                           emTokens,
                           emDateUtil,
-                          energimolnetAPI) {
+                          energimolnetAPI,
+                          emAuth) {
   function em(func, condensed) {
     func.then(function(res) {
       if (condensed === true) {
@@ -410,6 +411,7 @@ module.exports = function($window,
   em.Tokens = emTokens;
   em.DateUtil = emDateUtil;
   em.api = energimolnetAPI;
+  em.auth = emAuth;
 
   $window.em = em;
 };
@@ -533,7 +535,7 @@ ngModule
   .factory('emSubscribers', ['emResourceFactory', 'energimolnetAPI', require('./models/subscribers')])
   .factory('emTokens', ['emResourceFactory', require('./models/tokens')])
 
-  .run(['$window', 'emAccounts', 'emClients', 'emConsumptionPreview', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFileJobs', 'emFtpConnections', 'emMe', 'emMeters', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', require('./debug-util')]);
+  .run(['$window', 'emAccounts', 'emClients', 'emConsumptionPreview', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFileJobs', 'emFtpConnections', 'emMe', 'emMeters', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', 'emAuth', require('./debug-util')]);
 
 },{"./auth":1,"./date-util":2,"./debug-util":3,"./energimolnet-api":4,"./models/accounts":6,"./models/clients":7,"./models/consumption-preview":8,"./models/consumption-stats":9,"./models/consumptions":10,"./models/ediel-jobs":11,"./models/file-jobs":12,"./models/ftp-connections":13,"./models/me":14,"./models/meters":15,"./models/owners":16,"./models/password":17,"./models/refreshtokens":18,"./models/reports":19,"./models/robot-jobs":20,"./models/robots":21,"./models/scrapers":22,"./models/subaccounts":23,"./models/subscribers":24,"./models/tokens":25,"./resource-factory":26}],6:[function(require,module,exports){
 module.exports = function(emResourceFactory) {

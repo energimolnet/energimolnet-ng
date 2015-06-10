@@ -33,7 +33,8 @@ module.exports = function($window,
                           emSubscribers,
                           emTokens,
                           emDateUtil,
-                          energimolnetAPI) {
+                          energimolnetAPI,
+                          emAuth) {
   function em(func, condensed) {
     func.then(function(res) {
       if (condensed === true) {
@@ -68,6 +69,7 @@ module.exports = function($window,
   em.Tokens = emTokens;
   em.DateUtil = emDateUtil;
   em.api = energimolnetAPI;
+  em.auth = emAuth;
 
   $window.em = em;
 };
