@@ -173,7 +173,7 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
   function handleAuthCode(code) {
     return $http.post(makeUrl([BASE_URL, PATH_TOKEN]), {
       grant_type: 'authorization_code',
-      code: 'code',
+      code: code,
       client_id: authConfig.clientId,
       client_secret: authConfig.clientSecret,
       state: 'emAuth',
