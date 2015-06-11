@@ -14,6 +14,7 @@ var KEY_REFRESH_TOKEN =   'emRefreshToken';
 var KEY_ACCESS_TOKEN =    'emAccessToken';
 
 module.exports = function($window, $http, $q, authConfig, BASE_URL) {
+  var _this = this;
   var requestQueue = [];
   var fetchingAccessToken = false;
 
