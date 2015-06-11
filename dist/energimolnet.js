@@ -37,7 +37,7 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
   }
 
   function setToken(token, key) {
-    if (token && token.length > 0) {
+    if (token) {
       var type = typeof token;
 
       if (type !== 'string' && type !== 'number') {
@@ -182,7 +182,12 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
       redirect_uri: authConfig.redirectUri
     }).then(function(data) {
       setRefreshToken(data.refresh_token);
-      setAccessToken(data.access_token);
+      setAccessToken({
+        access_token: data.access_token,
+        expires_in: data.expires_in,
+        token_type: data.token_type,
+        scope: data.scope
+      });
     });
   }
 
