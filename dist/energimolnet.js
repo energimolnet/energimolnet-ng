@@ -24,7 +24,11 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
 
   function setPrivateToken(token) { setToken(token, KEY_PRIVATE_TOKEN); }
   function setRefreshToken(token) { setToken(token, KEY_REFRESH_TOKEN); }
-  function setAccessToken(token) { setToken(token, KEY_ACCESS_TOKEN); }
+
+  function setAccessToken(token) {
+    token.expires_at = Date.now() + token.expires_in * 1000;
+    setToken(token, KEY_ACCESS_TOKEN);
+  }
 
   function getToken(key) {
     var value = $window.localStorage.getItem(key);
@@ -41,7 +45,7 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
       var type = typeof token;
 
       if (type !== 'string' && type !== 'number') {
-        key = JSON.stringify(key);
+        token = JSON.stringify(token);
       }
 
       $window.localStorage.setItem(key, token);
@@ -118,7 +122,7 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
 
             // Process any pending requests
             requestQueue.forEach(function(queueFunc) {
-              queueFunc(newToken);
+              queueFunc(getAccessToken());
             });
 
             // Clear queue
@@ -151,9 +155,6 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
       grant_type: 'refresh_token',
       scope: 'basic',
       refresh_token: refreshToken
-    }).then(function(token) {
-      token.expires_at = Date.now() + token.expires_in * 1000;
-      return token;
     });
   }
 
@@ -180,14 +181,11 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
       state: 'emAuth',
       scope: 'basic',
       redirect_uri: authConfig.redirectUri
-    }).then(function(data) {
-      setRefreshToken(data.refresh_token);
-      setAccessToken({
-        access_token: data.access_token,
-        expires_in: data.expires_in,
-        token_type: data.token_type,
-        scope: data.scope
-      });
+    }).then(function(res) {
+      var token = res.data;
+
+      setRefreshToken(token.refresh_token);
+      setAccessToken(token);
     });
   }
 

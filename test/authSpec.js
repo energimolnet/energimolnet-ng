@@ -1,34 +1,37 @@
 describe('Energimolnet Auth', function() {
-  var $httpBackend, api, auth, $window;
+  var $httpBackend, $rootScope, api, auth, $window;
   var BASE_URL = 'http://dummy.local';
   var refreshToken = 'refresh1234567890';
+  var authConfig = {
+    disabled: false,
+    clientId: 'testClientID',
+    clientSecret: 'testClientSecret',
+    redirectUri: 'http://dummier.local/path'
+  };
 
   beforeEach(module('energimolnet'));
 
   beforeEach(function() {
     angular.module('energimolnet')
       .constant('apiBaseUrl', BASE_URL)
-      .value('authConfig', {
-        disabled: false,
-        clientId: 'testClientID',
-        clientSecret: 'testClientSecret',
-        redirectUri: 'http://dummier.local/path'
-      });
+      .value('authConfig', authConfig);
   });
 
-  beforeEach(inject(function(_$httpBackend_, _$window_, energimolnetAPI, emAuth) {
+  beforeEach(inject(function(_$httpBackend_, _$rootScope_, _$window_, energimolnetAPI, emAuth) {
     $httpBackend = _$httpBackend_;
     $window = _$window_;
+    $rootScope = _$rootScope_;
     api = energimolnetAPI;
     auth = emAuth;
+
+    $window.localStorage.removeItem('emPrivateToken');
+    $window.localStorage.removeItem('emRefreshToken');
+    $window.localStorage.removeItem('emAccessToken');
   }));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingRequest();
     $httpBackend.verifyNoOutstandingExpectation();
-    $window.localStorage.removeItem('emPrivateToken');
-    $window.localStorage.removeItem('emRefreshToken');
-    $window.localStorage.removeItem('emAccessToken');
   });
 
   it('should accept a private api token', function() {
@@ -231,5 +234,71 @@ describe('Energimolnet Auth', function() {
   it('should create an authorization url that contains client secret', function() {
     var authUrl = auth.authorizeUrl();
     expect(authUrl.indexOf('client_secret=testClientSecret') > 0).toBe(true);
+  });
+
+  it('should fetch refresh token from authorization code', function() {
+    var code = 'auth_me_12345';
+    var refresh_token = 'refresh_12345';
+    var access_token = 'access_12345';
+
+    $httpBackend.expectPOST(BASE_URL + '/oauth/token', {
+      grant_type: 'authorization_code',
+      code: code,
+      client_id: authConfig.clientId,
+      client_secret: authConfig.clientSecret,
+      state: 'emAuth',
+      scope: 'basic',
+      redirect_uri: authConfig.redirectUri
+    }).respond(200, {
+      refresh_token: refresh_token,
+      access_token: access_token,
+      expires_in: 3600,
+      token_type: "Bearer",
+      scope: 'basic'
+    });
+
+    auth.handleAuthCode(code);
+
+    $httpBackend.flush();
+
+    expect(auth.getRefreshToken()).toBe(refresh_token);
+  });
+
+  it('should fetch access token from authorization code', function() {
+    var code = 'auth_me_12345';
+    var refresh_token = 'refresh_12345';
+    var access_token = 'access_12345';
+
+    $httpBackend.expectPOST(BASE_URL + '/oauth/token', {
+      grant_type: 'authorization_code',
+      code: code,
+      client_id: authConfig.clientId,
+      client_secret: authConfig.clientSecret,
+      state: 'emAuth',
+      scope: 'basic',
+      redirect_uri: authConfig.redirectUri
+    }).respond(200, {
+      refresh_token: refresh_token,
+      access_token: access_token,
+      expires_in: 3600,
+      token_type: "Bearer",
+      scope: 'basic'
+    });
+
+    auth.handleAuthCode(code);
+
+    $httpBackend.flush();
+
+    var config = {
+      url: '/dummy',
+      data: {test: true}
+    };
+
+    auth.authorize(config).then(function(authorizedConfig) {
+      var authHeader = authorizedConfig.headers.Authorization;
+      expect(authHeader).toBe('Bearer ' + access_token);
+    });
+
+    $rootScope.$digest();
   });
 });

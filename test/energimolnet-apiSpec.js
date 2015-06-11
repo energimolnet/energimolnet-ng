@@ -11,11 +11,15 @@ describe('Energimolnet API', function() {
       .value('authConfig', {disabled: false});
   });
 
-  beforeEach(inject(function(_$httpBackend_, _$rootScope_, energimolnetAPI, emAuth) {
+  beforeEach(inject(function(_$httpBackend_, _$rootScope_, $window, energimolnetAPI, emAuth) {
     $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
     api = energimolnetAPI;
     auth = emAuth;
+
+    $window.localStorage.removeItem('emPrivateToken');
+    $window.localStorage.removeItem('emRefreshToken');
+    $window.localStorage.removeItem('emAccessToken');
   }));
 
   afterEach(function () {
