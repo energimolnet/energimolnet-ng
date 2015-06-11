@@ -14,7 +14,6 @@ var KEY_REFRESH_TOKEN =   'emRefreshToken';
 var KEY_ACCESS_TOKEN =    'emAccessToken';
 
 module.exports = function($window, $http, $q, authConfig, BASE_URL) {
-  var _this = this;
   var requestQueue = [];
   var fetchingAccessToken = false;
 
@@ -181,8 +180,8 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
       scope: 'basic',
       redirect_uri: authConfig.redirectUri
     }).then(function(data) {
-      _this.setRefreshToken(data.refresh_token);
-      _this.setAccessToken(data.access_token);
+      setRefreshToken(data.refresh_token);
+      setAccessToken(data.access_token);
     });
   }
 
