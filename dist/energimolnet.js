@@ -292,6 +292,7 @@ function getPeriod(dates, granularity) {
 }
 
 function getDate(period) {
+  if (typeof period === 'number') { period = period.toString(); }
   if (period.length < 4) { return new Date(); }
 
   var components = [parseInt(period.substr(0, 4), 10)];
