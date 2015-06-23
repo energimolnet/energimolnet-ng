@@ -45,6 +45,10 @@ describe('DateUtil', function() {
       expect(DateUtil.getDate(yearString).getTime()).toEqual(915145200000);
       expect(DateUtil.getDate(hourString).getTime()).toEqual(1097828400000);
     });
+
+    it('should return null if null given as input', function() {
+      expect(DateUtil.getDate(null)).toBe(null);
+    });
   });
 
   describe('ISO parsing test', function() {
