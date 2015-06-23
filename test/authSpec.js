@@ -137,16 +137,15 @@ describe('Energimolnet Auth', function() {
   });
 
   it('should reuse an existing valid access token', function() {
+    auth.setRefreshToken(refreshToken);
+
     // Inject a token into localStorage
     $window.localStorage.setItem('emAccessToken', JSON.stringify({
       access_token: "130f6d30ef95d9c16a82d311fb32c852c8398cbb",
       expires_at: 2146694400000,
-      refresh_token: refreshToken,
       scope: "basic",
       token_type: "Bearer"
     }));
-
-    auth.setRefreshToken(refreshToken);
 
     $httpBackend.expectGET(BASE_URL + '/api/2.0/dummy').respond(400, {});
 
@@ -189,36 +188,17 @@ describe('Energimolnet Auth', function() {
     $httpBackend.flush();
   });
 
-  it('should only use access token valid for the current refresh token', function() {
+  it('should remove access tokens when refresh token is set', function() {
     $window.localStorage.setItem('emAccessToken', JSON.stringify({
       access_token: "130f6d30ef95d9c16a82d311fb32c852c8398cbb",
       expires_at: 2146694400000,
-      refresh_token: 'otherRefreshToken',
       scope: "basic",
       token_type: "Bearer"
     }));
 
     auth.setRefreshToken(refreshToken);
 
-    $httpBackend.expectPOST(BASE_URL + '/oauth/token', {
-      client_id: 'testClientID',
-      client_secret: 'testClientSecret',
-      grant_type: 'refresh_token',
-      scope: 'basic',
-      refresh_token: refreshToken
-    }).respond(200, {
-      access_token: "130f6d30ef95d9c16a82d311fb32c852c8398cbb",
-      expires_in: 3600,
-      refresh_token: refreshToken,
-      scope: "basic",
-      token_type: "Bearer"
-    });
-
-    $httpBackend.expectGET(BASE_URL + '/api/2.0/dummy').respond(400, {});
-
-    api.request({url: '/dummy'});
-
-    $httpBackend.flush();
+    expect($window.localStorage.getItem('emAccessToken')).toBe(null);
   });
 
   it('should create an authorization url that contains redirect uri', function() {

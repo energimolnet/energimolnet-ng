@@ -22,10 +22,17 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
   function getAccessToken() { return getToken(KEY_ACCESS_TOKEN); }
 
   function setPrivateToken(token) { setToken(token, KEY_PRIVATE_TOKEN); }
-  function setRefreshToken(token) { setToken(token, KEY_REFRESH_TOKEN); }
+
+  function setRefreshToken(token) {
+    setToken(token, KEY_REFRESH_TOKEN);
+    setAccessToken(null);
+  }
 
   function setAccessToken(token) {
-    token.expires_at = Date.now() + token.expires_in * 1000;
+    if (token !== null) {
+      token.expires_at = Date.now() + token.expires_in * 1000;
+    }
+
     setToken(token, KEY_ACCESS_TOKEN);
   }
 
@@ -96,7 +103,7 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
     return $q(function(resolve, reject) {
       var accessToken = getAccessToken();
 
-      if (isValidToken(accessToken) && accessToken.refresh_token === refreshToken) {
+      if (isValidToken(accessToken)) {
         // User has a valid access token already, resolve with it
         resolve(accessToken);
       } else {
