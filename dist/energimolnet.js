@@ -295,6 +295,16 @@ function getPeriod(dates, granularity) {
     return isRange ? getDayPeriod(dates) : getMonthPeriod(dates);
   }
 
+  if (granularity === 'week' && !isRange) {
+    // Special case. Week is no actual granularity. This returns a week period
+    // starting at the specified date. No checks are made to determine if the
+    // provided date actually is the first day in a week.
+    var periodEnd = new Date(dates.getTime());
+    periodEnd.setDate(periodEnd.getDate() + 7);
+
+    return getDayPeriod([dates, periodEnd]);
+  }
+
   return getDayPeriod(dates);
 }
 
