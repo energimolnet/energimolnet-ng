@@ -85,7 +85,7 @@ function getPeriod(dates, granularity) {
     // provided date actually is the first day in a week.
     var start = (isArray) ? dates[0] : dates;
     var end = new Date(start.getTime());
-    end.setDate(end.getDate() + 7);
+    end.setDate(end.getDate() + 6);
 
     return getDayPeriod([start, end]);
   }
