@@ -285,7 +285,12 @@ function getDayPeriod(dates) {
 }
 
 function getPeriod(dates, granularity) {
-  var isRange = angular.isArray(dates) && dates.length > 1;
+  var isArray = angular.isArray(dates);
+  var isRange = (isArray && dates.length > 1);
+
+  if ((isArray && dates.length === 0) || dates === null || dates === undefined) {
+    return null;
+  }
 
   if (granularity === 'month') {
     return isRange ? getMonthPeriod(dates) : getYearPeriod(dates);
@@ -299,10 +304,11 @@ function getPeriod(dates, granularity) {
     // Special case. Week is no actual granularity. This returns a week period
     // starting at the specified date. No checks are made to determine if the
     // provided date actually is the first day in a week.
-    var periodEnd = new Date(dates.getTime());
-    periodEnd.setDate(periodEnd.getDate() + 7);
+    var start = (isArray) ? dates[0] : dates;
+    var end = new Date(start.getTime());
+    end.setDate(end.getDate() + 7);
 
-    return getDayPeriod([dates, periodEnd]);
+    return getDayPeriod([start, end]);
   }
 
   return getDayPeriod(dates);
