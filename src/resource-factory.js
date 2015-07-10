@@ -33,7 +33,11 @@ module.exports = function (Api) {
     }
 
     if (config.forAccount) {
-      Resource.prototype.forAccount = _emForAccount;
+      Resource.prototype.forAccount = _emForResource('accounts', config.forAccount);
+    }
+
+    if (config.forMeter) {
+      Resource.prototype.forMeter = _emForResource('meters', config.forMeter);
     }
 
     return new Resource();
@@ -104,19 +108,23 @@ module.exports = function (Api) {
     });
   }
 
-  function _emForAccount(id) {
-    var config = angular.copy(this._config.forAccount);
+  function _emForResource(resourceName, resourceConfig) {
+    var _this = this;
 
-    ['default', 'get', 'put', 'post', 'delete', 'query'].forEach(function(method) {
-      var value = config[method];
+    return function _forResource(id) {
+      var config = angular.copy(resourceConfig);
 
-      // Append accounts/id/ to paths that don't start with /
-      if (typeof value === 'string' && value[0] !== '/') {
-        config[method] = '/accounts/' + id + '/' + value;
-      }
-    });
+      ['default', 'get', 'put', 'post', 'delete', 'query'].forEach(function(method) {
+        var value = config[method];
 
-    return resourceFactory(config);
+        // Append resource/id/ to paths that don't start with /
+        if (typeof value === 'string' && value[0] !== '/') {
+          config[method] = '/' + resourceName + '/' + id + '/' + value;
+        }
+      });
+
+      return resourceFactory(config);
+    };
   }
 
   function _removeEmpty(object) {

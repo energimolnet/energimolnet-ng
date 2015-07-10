@@ -71,6 +71,42 @@ describe('Resource Factory', function() {
     $httpBackend.flush();
   });
 
+  it('should return collections that return new ones using the forMeter method', function() {
+    var collection = resourceFactory({
+      forMeter: {
+        default: 'testcollection',
+        get: true,
+        query: true
+      }
+    });
+
+    var url = [BASE_URL, 'api/2.0', 'meters', '12345', 'testcollection', '67890'].join('/');
+    $httpBackend.expectGET(url).respond(200, {});
+
+    var forMeterCollection = collection.forMeter("12345");
+    forMeterCollection.get("67890");
+
+    $httpBackend.flush();
+  });
+
+  it('should respect custom paths for collections created using forMeter method', function() {
+    var collection = resourceFactory({
+      forMeter: {
+        default: 'testcollection',
+        get: '/other',
+        query: 'testquery'
+      }
+    });
+
+    var url = [BASE_URL, 'api/2.0', 'other', '67890'].join('/');
+    $httpBackend.expectGET(url).respond(200, {});
+
+    var forMeterCollection = collection.forMeter("12345");
+    forMeterCollection.get("67890");
+
+    $httpBackend.flush();
+  });
+
   it('should respect individual paths for different http methods', function() {
     var collection = resourceFactory({
       default: '/default',
