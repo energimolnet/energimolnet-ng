@@ -568,7 +568,7 @@ ngModule
   .factory('emSubscribers', ['emResourceFactory', 'energimolnetAPI', require('./models/subscribers')])
   .factory('emTokens', ['emResourceFactory', require('./models/tokens')])
 
-  .run(['$window', 'emAccounts', 'emClients', 'emConsumptionPreview', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFileJobs', 'emFtpConnections', 'emMe', 'emMeters', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', 'emAuth', require('./debug-util')]);
+  .run(['$window', 'emAccounts', 'emClients', 'emCalculatedMetrics', 'emConsumptionPreview', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFileJobs', 'emFtpConnections', 'emMe', 'emMeters', 'emMetricModels', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', 'emAuth', require('./debug-util')]);
 
 },{"./auth":1,"./date-util":2,"./debug-util":3,"./energimolnet-api":4,"./models/accounts":6,"./models/calculated-metrics":7,"./models/clients":8,"./models/consumption-preview":9,"./models/consumption-stats":10,"./models/consumptions":11,"./models/ediel-jobs":12,"./models/file-jobs":13,"./models/ftp-connections":14,"./models/me":15,"./models/meters":16,"./models/metric-models":17,"./models/owners":18,"./models/password":19,"./models/refreshtokens":20,"./models/reports":21,"./models/robot-jobs":22,"./models/robots":23,"./models/scrapers":24,"./models/subaccounts":25,"./models/subscribers":26,"./models/tokens":27,"./resource-factory":28}],6:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
