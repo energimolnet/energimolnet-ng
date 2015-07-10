@@ -14,6 +14,7 @@
 module.exports = function($window,
                           emAccounts,
                           emClients,
+                          emCalculatedMetrics,
                           emConsumptionPreview,
                           emConsumptionStats,
                           emConsumptions,
@@ -22,6 +23,7 @@ module.exports = function($window,
                           emFtpConnections,
                           emMe,
                           emMeters,
+                          emMetricModels,
                           emOwners,
                           emPassword,
                           emRefreshTokens,
@@ -49,14 +51,16 @@ module.exports = function($window,
 
   em.Accounts = emAccounts;
   em.Clients = emClients;
+  em.CalculatedMetrics = emCalculatedMetrics;
   em.ConsumptionPreview = emConsumptionPreview;
   em.ConsumptionStats = emConsumptionStats;
   em.Consumptions = emConsumptions;
   em.EdielJobs = emEdielJobs;
   em.FileJobs = emFileJobs;
   em.FtpConnections = emFtpConnections;
-  em.Meters = emMeters;
   em.Me = emMe;
+  em.Meters = emMeters;
+  em.MetricModels = emMetricModels;
   em.Owners = emOwners;
   em.Password = emPassword;
   em.RefreshTokens = emRefreshTokens;

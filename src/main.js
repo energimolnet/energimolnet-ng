@@ -17,6 +17,7 @@ ngModule
   .factory('emResourceFactory', ['energimolnetAPI', require('./resource-factory')])
 
   .factory('emAccounts', ['emResourceFactory', require('./models/accounts')])
+  .factory('emCalculatedMetrics', ['emResourceFactory', require('./models/calculated-metrics')])
   .factory('emClients', ['emResourceFactory', require('./models/clients')])
   .factory('emConsumptionPreview', ['emResourceFactory', require('./models/consumption-preview')])
   .factory('emConsumptionStats', ['emResourceFactory', require('./models/consumption-stats')])
@@ -26,6 +27,7 @@ ngModule
   .factory('emFtpConnections', ['emResourceFactory', require('./models/ftp-connections')])
   .factory('emMe', ['emResourceFactory', require('./models/me')])
   .factory('emMeters', ['emResourceFactory', 'energimolnetAPI', require('./models/meters')])
+  .factory('emMetricModels', ['emResourceFactory', require('./models/metric-models')])
   .factory('emOwners', ['emResourceFactory', require('./models/owners')])
   .factory('emPassword', ['emResourceFactory', require('./models/password')])
   .factory('emRefreshTokens', ['emResourceFactory', require('./models/refreshtokens')])
