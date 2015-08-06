@@ -14,6 +14,7 @@
 module.exports = function($window,
                           emAccounts,
                           emClients,
+                          emComplaints,
                           emCalculatedMetrics,
                           emConsumptionPreview,
                           emConsumptionStats,
@@ -52,6 +53,7 @@ module.exports = function($window,
 
   em.Accounts = emAccounts;
   em.Clients = emClients;
+  em.Complaints = emComplaints;
   em.CalculatedMetrics = emCalculatedMetrics;
   em.ConsumptionPreview = emConsumptionPreview;
   em.ConsumptionStats = emConsumptionStats;
