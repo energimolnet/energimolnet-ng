@@ -63,7 +63,13 @@ function getDayPeriod(dates) {
   });
 }
 
-function getPeriod(dates, granularity) {
+// Returns a period for the provided date range, or single date.
+// Will auto-calculate period style depending on granularity, unless force is
+// set to true.
+// E.g. when getting day granularity for a single date, the function will assume
+// you want day values for the date's month.
+
+function getPeriod(dates, granularity, forced) {
   var isArray = angular.isArray(dates);
   var isRange = (isArray && dates.length > 1);
 
@@ -72,11 +78,11 @@ function getPeriod(dates, granularity) {
   }
 
   if (granularity === 'month') {
-    return isRange ? getMonthPeriod(dates) : getYearPeriod(dates);
+    return (isRange || forced) ? getMonthPeriod(dates) : getYearPeriod(dates);
   }
 
   if (granularity === 'day') {
-    return isRange ? getDayPeriod(dates) : getMonthPeriod(dates);
+    return (isRange || forced) ? getDayPeriod(dates) : getMonthPeriod(dates);
   }
 
   if (granularity === 'week' && !isRange) {
