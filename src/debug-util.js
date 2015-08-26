@@ -31,6 +31,7 @@ module.exports = function($window,
                           emRefreshTokens,
                           emReports,
                           emRobotJobs,
+                          emRobotStats,
                           emRobots,
                           emScrapers,
                           emSubaccounts,
@@ -70,6 +71,7 @@ module.exports = function($window,
   em.RefreshTokens = emRefreshTokens;
   em.Reports = emReports;
   em.RobotJobs = emRobotJobs;
+  em.RobotStats = emRobotStats;
   em.Robots = emRobots;
   em.Scrapers = emScrapers;
   em.Subaccounts = emSubaccounts;
