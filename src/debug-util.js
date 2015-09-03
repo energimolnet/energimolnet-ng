@@ -16,7 +16,6 @@ module.exports = function($window,
                           emClients,
                           emComplaints,
                           emCalculatedMetrics,
-                          emConsumptionPreview,
                           emConsumptionStats,
                           emConsumptions,
                           emEdielJobs,
@@ -56,7 +55,6 @@ module.exports = function($window,
   em.Clients = emClients;
   em.Complaints = emComplaints;
   em.CalculatedMetrics = emCalculatedMetrics;
-  em.ConsumptionPreview = emConsumptionPreview;
   em.ConsumptionStats = emConsumptionStats;
   em.Consumptions = emConsumptions;
   em.EdielJobs = emEdielJobs;

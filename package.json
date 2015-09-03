@@ -8,8 +8,12 @@
     "watch:test": "./node_modules/karma/bin/karma start --auto-watch --no-single-run",
     "clean": "rm -rf ./dist && mkdir ./dist",
     "start": "npm run clean && npm run build && npm run build:min && npm test",
-    "build": "./node_modules/.bin/browserify ./src/main.js > ./dist/energimolnet.js",
-    "build:min": "./node_modules/.bin/browserify ./src/main.js -t uglifyify > ./dist/energimolnet.min.js"
+    "build": "npm run build:normal && npm run build:user",
+    "build:min": "npm run build:normal:min && npm run build:user:min",
+    "build:normal": "./node_modules/.bin/browserify ./src/main.js > ./dist/energimolnet.js",
+    "build:user": "./node_modules/.bin/browserify ./src/main.js > ./dist/energimolnet-user.js",
+    "build:normal:min": "./node_modules/.bin/browserify ./src/main.js -t uglifyify > ./dist/energimolnet.min.js",
+    "build:user:min": "./node_modules/.bin/browserify ./src/main.js -t uglifyify > ./dist/energimolnet-user.min.js"
   },
   "repository": {
     "type": "git",
