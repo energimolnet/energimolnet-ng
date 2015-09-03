@@ -11,9 +11,9 @@
     "build": "npm run build:normal && npm run build:user",
     "build:min": "npm run build:normal:min && npm run build:user:min",
     "build:normal": "./node_modules/.bin/browserify ./src/main.js > ./dist/energimolnet.js",
-    "build:user": "./node_modules/.bin/browserify ./src/main.js > ./dist/energimolnet-user.js",
+    "build:user": "./node_modules/.bin/browserify ./src/main-user.js > ./dist/energimolnet-user.js",
     "build:normal:min": "./node_modules/.bin/browserify ./src/main.js -t uglifyify > ./dist/energimolnet.min.js",
-    "build:user:min": "./node_modules/.bin/browserify ./src/main.js -t uglifyify > ./dist/energimolnet-user.min.js"
+    "build:user:min": "./node_modules/.bin/browserify ./src/main-user.js -t uglifyify > ./dist/energimolnet-user.min.js"
   },
   "repository": {
     "type": "git",
