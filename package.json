@@ -2,7 +2,7 @@
   "name": "energimolnet-ng",
   "version": "0.3.0",
   "description": "Angular SDK for Energimolnet API v2",
-  "main": "dist/index.js",
+  "main": "dist/energimolnet.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
     "watch:test": "./node_modules/karma/bin/karma start --auto-watch --no-single-run",
