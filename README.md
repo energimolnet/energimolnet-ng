@@ -23,7 +23,7 @@ The dist-files are available in the repo, so there should be no need to build in
 
 ## Usage example
 
-Documentation regarding authentication, the available endpoints, and response data format can be found [at Apiary](http://docs.energimolnetv2.apiary.io/). Note that the 2.0 API is currently in BETA and will change prior to public release.
+Documentation regarding authentication, the available endpoints, and response data format can be found [at Apiary](http://docs.energimolnetv2.apiary.io/).
 
 ## Authenticating user
 
