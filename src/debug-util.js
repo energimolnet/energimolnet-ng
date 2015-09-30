@@ -13,6 +13,7 @@
 
 module.exports = function($window,
                           emAccounts,
+                          emApps,
                           emClients,
                           emComplaints,
                           emCalculatedMetrics,
@@ -52,6 +53,7 @@ module.exports = function($window,
   }
 
   em.Accounts = emAccounts;
+  em.Apps = emApps;
   em.Clients = emClients;
   em.Complaints = emComplaints;
   em.CalculatedMetrics = emCalculatedMetrics;
