@@ -3,12 +3,12 @@ Angular SDK for Energimolnet API v2
 
 ## Installation
 
-Currently, we recommend installing via bower:
+Currently, we recommend installing via npm:
 ```
-bower install energimolnet/energimolnet-ng
+npm install energimolnet-ng
 ```
 
-The SDK depends on Angular, however it is not listed as a dependency in bower to let you choose where to get it from (i.e. bower/npm/other package manager). It has been tested with Angular 1.3.
+The SDK depends on Angular. However, it is not listed as a dependency which means you can choose where to get it from (i.e. bower/npm/other package manager). It has been tested with Angular 1.3. and 1.4.
 
 ## Building
 
@@ -17,7 +17,7 @@ There should be little need for building the library yourself (except for when h
 npm install && npm start
 ```
 
-This will output two files in the dist/ folder, `energimolnet.js` and the minified version `energimolnet.min.js`, built with the latest source from src/ folder.
+This will output four files in the dist/ folder, `energimolnet.js`, `energimolnet-user.js`, and the minified versions `energimolnet.min.js`, and `energimolnet-user.min.js`.
 
 The dist-files are available in the repo, so there should be no need to build in this way. Since angular uses its own module system, we have not provided node-style modules. Our intention for the future is to provide a pure JS version, however we currently depend too much on Angular's `$http` service and `$rootScope` for events.
 
