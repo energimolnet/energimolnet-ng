@@ -5,7 +5,10 @@ module.exports = function(emResourceFactory) {
     query: true,
     put: false,
     post: false,
-    delete: false
+    delete: false,
+    forAccount: {
+      default: 'stats/robots',
+      get: true
+    }
   });
 };
-

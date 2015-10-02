@@ -32,6 +32,7 @@ ngModule
   .factory('emRefreshTokens', ['emResourceFactory', require('./models/refreshtokens')])
   .factory('emReports', ['emResourceFactory', require('./models/reports')])
   .factory('emRobots', ['emResourceFactory', 'energimolnetAPI', require('./models/robots')])
+  .factory('emRobotStats', ['emResourceFactory', require('./models/robot-stats')])
   .factory('emScrapers', ['emResourceFactory', require('./models/scrapers')])
   .factory('emSubaccounts', ['emResourceFactory', require('./models/subaccounts')])
   .factory('emSubscribers', ['emResourceFactory', 'energimolnetAPI', require('./models/subscribers')]);

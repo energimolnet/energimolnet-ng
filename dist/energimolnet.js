@@ -879,10 +879,13 @@ module.exports = function(emResourceFactory) {
     query: true,
     put: false,
     post: false,
-    delete: false
+    delete: false,
+    forAccount: {
+      default: 'stats/robots',
+      get: true
+    }
   });
 };
-
 
 },{}],26:[function(require,module,exports){
 module.exports = function(emResourceFactory, energimolnetAPI) {
