@@ -29,6 +29,7 @@ ngModule
   .factory('emFtpConnections', ['emResourceFactory', require('./models/ftp-connections')])
   .factory('emMe', ['emResourceFactory', require('./models/me')])
   .factory('emMeters', ['emResourceFactory', 'energimolnetAPI', require('./models/meters')])
+  .factory('emMeterStats', ['emResourceFactory', require('./models/meter-stats')])
   .factory('emMetricModels', ['emResourceFactory', require('./models/metric-models')])
   .factory('emOwners', ['emResourceFactory', require('./models/owners')])
   .factory('emPassword', ['emResourceFactory', require('./models/password')])
@@ -42,4 +43,4 @@ ngModule
   .factory('emSubscribers', ['emResourceFactory', 'energimolnetAPI', require('./models/subscribers')])
   .factory('emTokens', ['emResourceFactory', require('./models/tokens')])
 
-  .run(['$window', 'emAccounts', 'emApps', 'emClients', 'emComplaints', 'emCalculatedMetrics', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFeeds', 'emFileJobs', 'emFtpConnections', 'emMe', 'emMeters', 'emMetricModels', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobotStats', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', 'emAuth', require('./debug-util')]);
+  .run(['$window', 'emAccounts', 'emApps', 'emClients', 'emComplaints', 'emCalculatedMetrics', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFeeds', 'emFileJobs', 'emFtpConnections', 'emMe', 'emMeters', 'emMeterStats', 'emMetricModels', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobotStats', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', 'emAuth', require('./debug-util')]);

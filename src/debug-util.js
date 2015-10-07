@@ -25,6 +25,7 @@ module.exports = function($window,
                           emFtpConnections,
                           emMe,
                           emMeters,
+                          emMeterStats,
                           emMetricModels,
                           emOwners,
                           emPassword,
@@ -65,6 +66,7 @@ module.exports = function($window,
   em.FtpConnections = emFtpConnections;
   em.Me = emMe;
   em.Meters = emMeters;
+  em.MeterStats = emMeterStats;
   em.MetricModels = emMetricModels;
   em.Owners = emOwners;
   em.Password = emPassword;
