@@ -1,6 +1,6 @@
 {
   "name": "energimolnet-ng",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Angular SDK for Energimolnet API v2",
   "main": "dist/energimolnet.js",
   "scripts": {
