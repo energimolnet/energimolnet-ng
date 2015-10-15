@@ -9,7 +9,7 @@ module.exports = function(emResourceFactory) {
   });
 
   Accounts.exists = emResourceFactory({
-    default: '/acccounts/exists',
+    default: '/accounts/exists',
     get: false,
     query: true,
     put: false,
