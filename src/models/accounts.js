@@ -1,5 +1,5 @@
 module.exports = function(emResourceFactory) {
-  return emResourceFactory({
+  var Accounts = emResourceFactory({
     default: '/accounts',
     get: true,
     query: true,
@@ -7,4 +7,15 @@ module.exports = function(emResourceFactory) {
     post: true,
     delete: true
   });
+
+  Accounts.exists = emResourceFactory({
+    default: '/acccounts/exists',
+    get: false,
+    query: true,
+    put: false,
+    post: false,
+    delete: false
+  });
+
+  return Accounts;
 };

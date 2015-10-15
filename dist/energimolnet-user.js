@@ -494,7 +494,7 @@ ngModule
 
 },{"./auth":1,"./date-util":2,"./energimolnet-api":3,"./models/accounts":5,"./models/apps":6,"./models/calculated-metrics":7,"./models/complaints":8,"./models/consumption-stats":9,"./models/consumptions":10,"./models/feeds":11,"./models/ftp-connections":12,"./models/me":13,"./models/meter-stats":14,"./models/meters":15,"./models/metric-models":16,"./models/owners":17,"./models/password":18,"./models/refreshtokens":19,"./models/reports":20,"./models/robot-stats":21,"./models/robots":22,"./models/scrapers":23,"./models/subaccounts":24,"./models/subscribers":25,"./resource-factory":26}],5:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
-  return emResourceFactory({
+  var Accounts = emResourceFactory({
     default: '/accounts',
     get: true,
     query: true,
@@ -502,6 +502,17 @@ module.exports = function(emResourceFactory) {
     post: true,
     delete: true
   });
+
+  Accounts.exists = emResourceFactory({
+    default: '/acccounts/exists',
+    get: false,
+    query: true,
+    put: false,
+    post: false,
+    delete: false
+  });
+
+  return Accounts;
 };
 
 },{}],6:[function(require,module,exports){
