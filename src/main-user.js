@@ -24,6 +24,7 @@ ngModule
   .factory('emConsumptions', ['emResourceFactory', 'energimolnetAPI', require('./models/consumptions')])
   .factory('emFeeds', ['emResourceFactory', require('./models/feeds')])
   .factory('emFtpConnections', ['emResourceFactory', require('./models/ftp-connections')])
+  .factory('emInvitations', ['emResourceFactory', require('./models/invitations')])
   .factory('emMe', ['emResourceFactory', require('./models/me')])
   .factory('emMeters', ['emResourceFactory', 'energimolnetAPI', require('./models/meters')])
   .factory('emMeterStats', ['emResourceFactory', require('./models/meter-stats')])

@@ -23,6 +23,7 @@ module.exports = function($window,
                           emFeeds,
                           emFileJobs,
                           emFtpConnections,
+                          emInvitations,
                           emMe,
                           emMeters,
                           emMeterStats,
@@ -64,6 +65,7 @@ module.exports = function($window,
   em.Feeds = emFeeds;
   em.FileJobs = emFileJobs;
   em.FtpConnections = emFtpConnections;
+  em.Invitations = emInvitations;
   em.Me = emMe;
   em.Meters = emMeters;
   em.MeterStats = emMeterStats;

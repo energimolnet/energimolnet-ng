@@ -218,7 +218,7 @@ module.exports = function($window, $http, $q, authConfig, BASE_URL) {
   };
 };
 
-},{"./util/makeurl":33}],2:[function(require,module,exports){
+},{"./util/makeurl":34}],2:[function(require,module,exports){
 /**
   DateUtil
   --------
@@ -398,6 +398,7 @@ module.exports = function($window,
                           emFeeds,
                           emFileJobs,
                           emFtpConnections,
+                          emInvitations,
                           emMe,
                           emMeters,
                           emMeterStats,
@@ -439,6 +440,7 @@ module.exports = function($window,
   em.Feeds = emFeeds;
   em.FileJobs = emFileJobs;
   em.FtpConnections = emFtpConnections;
+  em.Invitations = emInvitations;
   em.Me = emMe;
   em.Meters = emMeters;
   em.MeterStats = emMeterStats;
@@ -540,7 +542,7 @@ module.exports = function($http, $q, $rootScope, Auth, BASE_URL) {
   };
 };
 
-},{"./util/makeurl":33}],5:[function(require,module,exports){
+},{"./util/makeurl":34}],5:[function(require,module,exports){
 /*
  * This file glues all the separate components together.
  * Angular needs to be globally available.
@@ -570,6 +572,7 @@ ngModule
   .factory('emFeeds', ['emResourceFactory', require('./models/feeds')])
   .factory('emFileJobs', ['emResourceFactory', require('./models/file-jobs')])
   .factory('emFtpConnections', ['emResourceFactory', require('./models/ftp-connections')])
+  .factory('emInvitations', ['emResourceFactory', require('./models/invitations')])
   .factory('emMe', ['emResourceFactory', require('./models/me')])
   .factory('emMeters', ['emResourceFactory', 'energimolnetAPI', require('./models/meters')])
   .factory('emMeterStats', ['emResourceFactory', require('./models/meter-stats')])
@@ -586,9 +589,9 @@ ngModule
   .factory('emSubscribers', ['emResourceFactory', 'energimolnetAPI', require('./models/subscribers')])
   .factory('emTokens', ['emResourceFactory', require('./models/tokens')])
 
-  .run(['$window', 'emAccounts', 'emApps', 'emClients', 'emComplaints', 'emCalculatedMetrics', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFeeds', 'emFileJobs', 'emFtpConnections', 'emMe', 'emMeters', 'emMeterStats', 'emMetricModels', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobotStats', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', 'emAuth', require('./debug-util')]);
+  .run(['$window', 'emAccounts', 'emApps', 'emClients', 'emComplaints', 'emCalculatedMetrics', 'emConsumptionStats', 'emConsumptions', 'emEdielJobs', 'emFeeds', 'emFileJobs', 'emFtpConnections', 'emInvitations', 'emMe', 'emMeters', 'emMeterStats', 'emMetricModels', 'emOwners', 'emPassword', 'emRefreshTokens', 'emReports', 'emRobotJobs', 'emRobotStats', 'emRobots', 'emScrapers', 'emSubaccounts', 'emSubscribers', 'emTokens', 'emDateUtil', 'energimolnetAPI', 'emAuth', require('./debug-util')]);
 
-},{"./auth":1,"./date-util":2,"./debug-util":3,"./energimolnet-api":4,"./models/accounts":6,"./models/apps":7,"./models/calculated-metrics":8,"./models/clients":9,"./models/complaints":10,"./models/consumption-stats":11,"./models/consumptions":12,"./models/ediel-jobs":13,"./models/feeds":14,"./models/file-jobs":15,"./models/ftp-connections":16,"./models/me":17,"./models/meter-stats":18,"./models/meters":19,"./models/metric-models":20,"./models/owners":21,"./models/password":22,"./models/refreshtokens":23,"./models/reports":24,"./models/robot-jobs":25,"./models/robot-stats":26,"./models/robots":27,"./models/scrapers":28,"./models/subaccounts":29,"./models/subscribers":30,"./models/tokens":31,"./resource-factory":32}],6:[function(require,module,exports){
+},{"./auth":1,"./date-util":2,"./debug-util":3,"./energimolnet-api":4,"./models/accounts":6,"./models/apps":7,"./models/calculated-metrics":8,"./models/clients":9,"./models/complaints":10,"./models/consumption-stats":11,"./models/consumptions":12,"./models/ediel-jobs":13,"./models/feeds":14,"./models/file-jobs":15,"./models/ftp-connections":16,"./models/invitations":17,"./models/me":18,"./models/meter-stats":19,"./models/meters":20,"./models/metric-models":21,"./models/owners":22,"./models/password":23,"./models/refreshtokens":24,"./models/reports":25,"./models/robot-jobs":26,"./models/robot-stats":27,"./models/robots":28,"./models/scrapers":29,"./models/subaccounts":30,"./models/subscribers":31,"./models/tokens":32,"./resource-factory":33}],6:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   var Accounts = emResourceFactory({
     default: '/accounts',
@@ -763,13 +766,25 @@ module.exports = function(emResourceFactory) {
 },{}],17:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
+    default: '/invitations',
+    get: true,
+    query: true,
+    put: true,
+    post: true,
+    delete: true
+  });
+};
+
+},{}],18:[function(require,module,exports){
+module.exports = function(emResourceFactory) {
+  return emResourceFactory({
     default: '/accounts/me',
     get: true,
     put: true
   });
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/stats/meters',
@@ -781,7 +796,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var PATH_ASSIGN = '/meters/many/assign_to';
 var PATH_SHARE = '/meters/many/share_with';
 var PATH_REVOKE = '/meters/many/revoke';
@@ -840,7 +855,7 @@ module.exports = function(emResourceFactory, energimolnetAPI) {
   }
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/metric_models',
@@ -852,7 +867,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/owners',
@@ -861,7 +876,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/accounts/me/password',
@@ -869,7 +884,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/refreshtokens',
@@ -877,7 +892,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/reports',
@@ -885,7 +900,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/robot_jobs',
@@ -897,7 +912,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/stats/robots',
@@ -909,7 +924,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 module.exports = function(emResourceFactory, energimolnetAPI) {
   var Robots = emResourceFactory({
     default: '/robots',
@@ -930,7 +945,7 @@ module.exports = function(emResourceFactory, energimolnetAPI) {
   return Robots;
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     default: '/scrapers',
@@ -939,7 +954,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     forAccount: {
@@ -953,7 +968,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var makeUrl = require('../util/makeurl');
 
 module.exports = function(emResourceFactory, Api) {
@@ -995,7 +1010,7 @@ module.exports = function(emResourceFactory, Api) {
   return Subscribers;
 };
 
-},{"../util/makeurl":33}],31:[function(require,module,exports){
+},{"../util/makeurl":34}],32:[function(require,module,exports){
 module.exports = function(emResourceFactory) {
   return emResourceFactory({
     forAccount: {
@@ -1009,7 +1024,7 @@ module.exports = function(emResourceFactory) {
   });
 };
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 /*
  * This factory generates model collections for Energimolnet.
  * Use the models found in the models folder.
@@ -1159,7 +1174,7 @@ module.exports = function (Api) {
   return resourceFactory;
 };
 
-},{"./util/makeurl":33}],33:[function(require,module,exports){
+},{"./util/makeurl":34}],34:[function(require,module,exports){
 module.exports = function makeUrl(components, params) {
   components = components == null? [] : !angular.isArray(components) ? [components] : components;
   var fullPath = [];
